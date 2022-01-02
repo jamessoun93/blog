@@ -4,8 +4,8 @@
 
 # Table of contents
 
-### Network
-- [SSH란 무엇일까요?](network/ssh)
+- [Network](blog/network)
+  - [SSH란 무엇일까요?](blog/network/ssh)
   
-### Database
-- [Installation(PostgreSQL)](database/installation(postgres))
+- [Database](blog/database)
+  - [Installation(PostgreSQL)](blog/database/installation(postgres))
