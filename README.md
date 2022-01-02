@@ -4,7 +4,7 @@
 
 ## Table of contents
 
-- [Network](blog/network)
-    - [SSH란 무엇일까요?](blog/network/ssh)
-- [Database](blog/database)
-    - [WIP::PostgreSQL 설치하기(MacOS)](blog/database/installation(postgres))
+- [Network](network)
+    - [SSH란 무엇일까요?](network/ssh)
+- [Database](database)
+    - [[WIP] PostgreSQL 설치하기(MacOS)](database/installation(postgres))
