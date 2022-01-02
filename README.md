@@ -10,4 +10,4 @@
 - [Network](network)
     - [SSH란 무엇일까요?](network/ssh)
 - [Database](database)
-    - [[WIP] PostgreSQL 설치하기(MacOS)](database/installation(postgres))
+    - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
