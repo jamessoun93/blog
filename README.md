@@ -1,1 +1,1 @@
-reset
+12 new chapters, 365 new chances
