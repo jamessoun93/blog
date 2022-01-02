@@ -7,4 +7,4 @@
 - [Network](blog/network)
     - [SSH란 무엇일까요?](blog/network/ssh)
 - [Database](blog/database)
-    - [Installation(PostgreSQL)](blog/database/installation(postgres))
+    - [WIP::PostgreSQL 설치하기(MacOS)](blog/database/installation(postgres))
