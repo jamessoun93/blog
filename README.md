@@ -11,4 +11,4 @@
     - [SSH란 무엇일까요?](network/ssh)
 - [Database](database)
     - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
-    - [[⚠️WIP] Data Types](database/data-types)
+    - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
