@@ -12,4 +12,61 @@ Node.js 서버에서는 [Moment.js](https://momentjs.com/)라는 라이브러리
 
 `1 D 1 M 1 S` => `1 day 1 minute 1 second`
 
+Think of as duration of time
 
+```sql
+SELECT ('1 D'::INTERVAL);
+```
+
+```sql
+SELECT ('1 D 20 H 30 M 45 S'::INTERVAL);
+```
+
+We can actually do numeric operations on intervals.
+
+Subtraction on INTERVALS
+```sql
+SELECT ('1 D 20 H 30 M 45 S'::INTERVAL) - ('1 D'::INTERVAL);
+```
+
+|id|column|
+|------|---|
+|1|20:30:45|
+
+Add or subtract from time from dates
+```sql
+SELECT ('NOV-20-1980 1:23 AM EST'::TIMESTAMP WITH TIME ZONE) - ('1 D'::INTERVAL);
+```
+
+|id|column|
+|------|---|
+|1|1980-11-18 23:23:00-07|
+
+```sql
+SELECT ('NOV-20-1980 1:23 AM EST'::TIMESTAMP WITH TIME ZONE) - ('4 D'::INTERVAL);
+```
+
+|id|column|
+|------|---|
+|1|1980-11-15 23:23:00-07|
+
+between two timestamps or dates
+```sql
+SELECT ('NOV-20-1980 1:23 AM EST'::TIMESTAMP WITH TIME ZONE) - ('NOV-10-1980 1:23 AM EST'::TIMESTAMP WITH TIME ZONE);
+```
+
+|id|column|
+|------|---|
+|1|10 days|
+
+between different times and timezones as well
+```sql
+SELECT ('NOV-20-1980 1:23 AM EST'::TIMESTAMP WITH TIME ZONE) - ('NOV-10-1980 5:43 PST'::TIMESTAMP WITH TIME ZONE);
+```
+
+|id|column|
+|------|---|
+|1|9 days 16:40:00|
+
+
+We can make use of database to do all these duration calculations instead of having to get some kind of specialized library at your server.
