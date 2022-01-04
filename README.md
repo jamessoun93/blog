@@ -12,3 +12,5 @@
 - [Database](database)
     - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
     - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
+    - [[⚠️WIP] [ACID #1] Transaction](database/acid#1-transaction)
+    - [[⚠️WIP] [ACID #2] Atomicity](database/acid#2-atomicity)
