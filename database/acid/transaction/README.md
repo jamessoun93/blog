@@ -1,10 +1,19 @@
 # Transaction
+트랜잭션이란 무엇일까요? 트랜잭션을 왜 사용할까요? 
 
-**Definition:** collection of SQL queries that are treated as one unit of work.
+트랜잭션이란, 하나의 작업 단위로 처리되는 SQL 쿼리 모음입니다.
 
-It’s very hard to do everything you want in one query. (it’s also impossible)
+보통 원하는 작업을 전부 하나의 SQL 쿼리문으로 처리하기는 어렵습니다. 어떤 작업이냐에따라 다르겠지만 사실 불가능에 가깝죠.
 
-E.g. Account Deposit (SELECT, UPDATE, UPDATE) → transaction consisting of 3 different queries.
+이해를 돕기 위해 트랜잭션을 적용할만한 간단한 예시로 계좌이체 프로세스를 예를 들어보겠습니다.
+
+계좌이체 프로세스를 간소화해서 실행해야하는 액션만 생각을 해본다면,
+
+1. `SELECT` - 보내는 이의 계좌 잔고를 확인한다.
+2. `UPDATE` - 보내는 이의 계좌 잔고에서 보낼 금액만큼 차감한다.
+3. `UPDATE` - 받는 이의 계좌 잔고에 받은 만큼 금액을 증감한다.
+
+트랜잭션은 이 세가지 작업을 하나의 작업으로 처리한다는 뜻입니다.
 
 ## Trasaction Lifespan
 
