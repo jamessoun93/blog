@@ -1,5 +1,6 @@
 # Transaction
-트랜잭션이란 무엇일까요? 트랜잭션을 왜 사용할까요? 
+
+트랜잭션이란 무엇일까요? 트랜잭션을 왜 사용할까요?
 
 트랜잭션이란, 하나의 작업 단위로 처리되는 SQL 쿼리 모음입니다.
 
@@ -18,26 +19,26 @@
 ## Trasaction Lifespan
 
 - `BEGIN`
-- `COMMIT` → persist this change to disk
+- `COMMIT` → disk에 변경사항을 저장한다 (persist)
 - `ROLLBACK` → all the changes, **forget about it**
-    - let’s say you’re making 20000 queries and there’s a crash in the middle of it. As you’re making them, do you persist them to disk? if you did, you’re gonna have to go undo all those work.
-    - when it comes to crash in the middle of 10000 queries, the database better know to rollback these changes.
-    - you can optimize your database based on your use case, mysql, postgres, sql server, oracle each one optimizes on certain things.
-        - I think Im going to optimize for crashes
-        - I think im going to optimize for commits
-        - In Postgres, commits are fastest because they do that in ways such that any query that is executed during the transaction, they try to persist this change. Postgres does a lot of I/O but their commits are really fast.
-    - What if during the commit, you get a crash → if your commits are fast, the risk is low but if your commits are slow like SQL server, if you have a large transaction thats scary (is it committed or not?)
+  - let’s say you’re making 20000 queries and there’s a crash in the middle of it. As you’re making them, do you persist them to disk? if you did, you’re gonna have to go undo all those work.
+  - when it comes to crash in the middle of 10000 queries, the database better know to rollback these changes.
+  - you can optimize your database based on your use case, mysql, postgres, sql server, oracle each one optimizes on certain things.
+    - I think Im going to optimize for crashes
+    - I think im going to optimize for commits
+    - In Postgres, commits are fastest because they do that in ways such that any query that is executed during the transaction, they try to persist this change. Postgres does a lot of I/O but their commits are really fast.
+  - What if during the commit, you get a crash → if your commits are fast, the risk is low but if your commits are slow like SQL server, if you have a large transaction thats scary (is it committed or not?)
 
 ## Nature of Transactions
 
 - usually transactions are used to change and modify data
 - however, its perfectly normal to have a read-only transaction
-    - when you actually tell the database that, it can optimize itself to it.
+  - when you actually tell the database that, it can optimize itself to it.
 - Use case?
-    - you want a transaction to maintain consistency
-    - Example, you want to generate a report and you want to get consistent snapshot based at the time of transaction
-        - I want anything that I read is based on the initial time
-        - anything you read, if something changed by a concurrent transaction, you don’t care. you want to be **isolated.**
+  - you want a transaction to maintain consistency
+  - Example, you want to generate a report and you want to get consistent snapshot based at the time of transaction
+    - I want anything that I read is based on the initial time
+    - anything you read, if something changed by a concurrent transaction, you don’t care. you want to be **isolated.**
 
 ## Example
 
