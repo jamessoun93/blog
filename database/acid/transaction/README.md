@@ -21,7 +21,7 @@
 - `BEGIN` → Transaction 시작
 - `COMMIT` → disk에 변경사항을 저장한다 (persist)
 - `ROLLBACK` → 모든 변경사항을 되돌린다.
-  - 만약 트랜잭션에서 20,000개의 쿼리를 실행하다가 중간에 문제가 생겼다고 가정해봅시다.
+  - 만약 트랜잭션에서 20,000개의 쿼리를 실행하다가 중간에 문제가 생겼다고 가정해봅시다. 문제가 생기기 전까지 실행됐던 쿼리들은 변경사항을 디스크에 쓰고 있었을까요? 만약 그랬다면 ROLLBACK 과정에서 디스크에 썼던 모든 변경사항을 전부 지워줘야합니다.
   - let’s say you’re making 20000 queries and there’s a crash in the middle of it. As you’re making them, do you persist them to disk? if you did, you’re gonna have to go undo all those work.
   - when it comes to crash in the middle of 10000 queries, the database better know to rollback these changes.
   - you can optimize your database based on your use case, mysql, postgres, sql server, oracle each one optimizes on certain things.
