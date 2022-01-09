@@ -31,8 +31,8 @@
 
 ## Nature of Transactions
 
-- usually transactions are used to change and modify data
-- however, its perfectly normal to have a read-only transaction
+- 트랜잭션은 보통 데이터를 생성하고 변경할 때 사용합니다.
+- 하지만 트랙잭션을 read-only 용도로 사용할 수도 있습니다.
   - when you actually tell the database that, it can optimize itself to it.
 - Use case?
   - you want a transaction to maintain consistency
