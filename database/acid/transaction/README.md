@@ -21,13 +21,12 @@
 - `BEGIN` → Transaction 시작
 - `COMMIT` → disk에 변경사항을 저장한다 (persist)
 - `ROLLBACK` → 모든 변경사항을 되돌린다.
-  - 만약 트랜잭션에서 20,000개의 쿼리를 실행하다가 중간에 문제가 생겼다고 가정해봅시다. 문제가 생기기 전까지 실행됐던 쿼리들은 변경사항을 디스크에 쓰고 있었을까요? 만약 그랬다면 ROLLBACK 과정에서 디스크에 썼던 모든 변경사항을 전부 지워줘야합니다.
-  - let’s say you’re making 20000 queries and there’s a crash in the middle of it. As you’re making them, do you persist them to disk? if you did, you’re gonna have to go undo all those work.
-  - when it comes to crash in the middle of 10000 queries, the database better know to rollback these changes.
-  - you can optimize your database based on your use case, mysql, postgres, sql server, oracle each one optimizes on certain things.
-    - I think Im going to optimize for crashes
-    - I think im going to optimize for commits
-    - In Postgres, commits are fastest because they do that in ways such that any query that is executed during the transaction, they try to persist this change. Postgres does a lot of I/O but their commits are really fast.
+  - 만약 트랜잭션에서 20,000개의 쿼리를 실행하다가 중간에 문제가 생겼다고 가정해봅시다. 문제가 생기기 전까지 실행됐던 쿼리들의 변경사항은 디스크에 써져 있었을까요? 만약 그랬다면 ROLLBACK 과정에서 디스크에 썼던 모든 변경사항을 전부 지워줘야합니다.
+  - 그렇다면 이런 과정속에서 최적화는 어떻게 진행해야할까요?
+  - 우리의 USE CASE에 따라 데이터베이스를 최적화할 수 있습니다. 우리가 잘 알고있는 MySQL, PostgreSQL, SQL Server, OracleDB 같은 DBMS들은 각각 특정 포인트에 포커스를 두고 최적화하게끔 만들어져 있습니다.
+    - ROLLBACK 단계에 포커스를 둔 최적화
+    - COMMIT 단계에 포커스를 둔 최적화
+    - 예를 들어 PostgreSQL 같은경우, 트랜잭션 내 쿼리들이 실행될 때 디스크에 변경사항을 쓰기때문에 최종적으로 COMMIT할 때의 속도가 굉장히 빠릅니다. (그래서 I/O 작업이 정말 많이 일어난다는 단점이 있기도 합니다.)
   - What if during the commit, you get a crash → if your commits are fast, the risk is low but if your commits are slow like SQL server, if you have a large transaction thats scary (is it committed or not?)
 
 ## Nature of Transactions
