@@ -27,7 +27,8 @@
     - ROLLBACK 단계에 포커스를 둔 최적화
     - COMMIT 단계에 포커스를 둔 최적화
     - 예를 들어 PostgreSQL 같은경우, 트랜잭션 내 쿼리들이 실행될 때 디스크에 변경사항을 쓰기때문에 최종적으로 COMMIT할 때의 속도가 굉장히 빠릅니다. (그래서 I/O 작업이 정말 많이 일어난다는 단점이 있기도 합니다.)
-  - What if during the commit, you get a crash → if your commits are fast, the risk is low but if your commits are slow like SQL server, if you have a large transaction thats scary (is it committed or not?)
+  - COMMIT 단계에서 CRASH가 나는 경우 사용하는 DBMS가 COMMIT이 빠른 경우라면 SQL Server처럼 COMMIT이 느린 경우보다 덜 위험할 수 있습니다.
+  - 트랜잭션 후 실제로 COMMIT이 되고 안되고는 굉장히 중요한 문제입니다.
 
 ## Nature of Transactions
 
