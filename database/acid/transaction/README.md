@@ -26,40 +26,44 @@
   - 우리의 USE CASE에 따라 데이터베이스를 최적화할 수 있습니다. 우리가 잘 알고있는 MySQL, PostgreSQL, SQL Server, OracleDB 같은 DBMS들은 각각 특정 포인트에 포커스를 두고 최적화하게끔 만들어져 있습니다.
     - ROLLBACK 단계에 포커스를 둔 최적화
     - COMMIT 단계에 포커스를 둔 최적화
-    - 예를 들어 PostgreSQL 같은경우, 트랜잭션 내 쿼리들이 실행될 때 디스크에 변경사항을 쓰기때문에 최종적으로 COMMIT할 때의 속도가 굉장히 빠릅니다. (그래서 I/O 작업이 정말 많이 일어난다는 단점이 있기도 합니다.)
+    - 예를 들어 PostgreSQL 같은 경우, 트랜잭션 내 쿼리들이 실행될 때 디스크에 변경사항을 쓰기 때문에 최종적으로 COMMIT 할 때의 속도가 굉장히 빠릅니다. (그래서 I/O 작업이 정말 많이 일어난다는 단점이 있기도 합니다.)
   - COMMIT 단계에서 CRASH가 나는 경우 사용하는 DBMS가 COMMIT이 빠른 경우라면 SQL Server처럼 COMMIT이 느린 경우보다 덜 위험할 수 있습니다.
   - 트랜잭션 후 실제로 COMMIT이 되고 안되고는 굉장히 중요한 문제입니다.
 
-## Nature of Transactions
+## Read-only Transactions
 
 - 트랜잭션은 보통 데이터를 생성하고 변경할 때 사용합니다.
 - 하지만 트랙잭션을 read-only 용도로 사용할 수도 있습니다.
-  - when you actually tell the database that, it can optimize itself to it.
-- Use case?
-  - you want a transaction to maintain consistency
-  - Example, you want to generate a report and you want to get consistent snapshot based at the time of transaction
-    - I want anything that I read is based on the initial time
-    - anything you read, if something changed by a concurrent transaction, you don’t care. you want to be **isolated.**
+- 활용사례 (Use Case)
+  - 데이터의 일관성을 유지하고 싶을때 트랜잭션을 사용할 수 있습니다.
+  - 리포트를 생성하는데 트랜잭션을 시작한 시점 이후 계속 같은 시점의 스냅샷을 필요로 하는 경우를 예로 들을 수 있습니다.
+    - 읽어들이는 데이터는 트랜잭션을 시작한 시점을 기준으로 한 데이터여야 하는 상황인 것이죠.
+    - 동시에 실행되는 다른 트랜잭션으로 인해 데이터가 변경된다고 하더라도 트랜잭션을 시작한 시점의 데이터만을 읽고 싶을때 트랜잭션을 사용할 수 있습니다.
+    - 이게 바로 ACID 개념의 `I`에 해당하는 Isolation의 개념입니다.
+    - Isolation 개념은 이어져올 다른 포스팅에서 다룰 예정입니다.
 
 ## Example
 
-Send $100 From Account 1 to Account 2
+| account_id | balance |
+|------------|---------|
+| 1          | $1000   |
+| 2          | $500    |
+
+Account 1에서 Account 2로 $100를 송금하는 상황
 
 ```sql
-BEGIN TX1
+BEGIN;
 
-SELECT BALANCE FROM ACCOUNT WHERE ID = 1
-BALANCE > 100 (constraint: balance can't go below 0, if it does it means its inconsistent data)
+	SELECT balance FROM accounts WHERE id = 1;
 
-UPDATE ACCOUNT SET BALANCE = BALANCE - 100 WHERE ID = 1
-UPDATE ACCOUNT SET BALANCE = BALANCE + 100 WHERE ID = 2
+	UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+	UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 
-COMMIT TX1
+COMMIT;
 ```
 
-## Things to note
-
-- When you don’t start a transaction, database will start one for you.
-- so if you execute a normal update statement or insert, the database in the backend starts a transaction and almost immediately commits it.
-- so we’re always in a transaction.
-- some transactions are user defined and some are actually built and implicitly defined by the system.
+### 결과
+| account_id | balance |
+|------------|---------|
+| 1          | $900    |
+| 2          | $600    |
