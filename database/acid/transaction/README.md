@@ -53,12 +53,10 @@ Account 1에서 Account 2로 $100를 송금하는 상황
 
 ```sql
 BEGIN;
-
-	SELECT balance FROM accounts WHERE id = 1;
-
-	UPDATE accounts SET balance = balance - 100 WHERE id = 1;
-	UPDATE accounts SET balance = balance + 100 WHERE id = 2;
-
+    SELECT balance FROM accounts WHERE id = 1;
+    
+    UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+    UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 COMMIT;
 ```
 
