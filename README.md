@@ -9,7 +9,7 @@
     - [[⚠️WIP] [성장통 시리즈 #2] 사내 Internal API Unit Test 개선기](growing-pains/2-internalapi-unittest-개선기)
 - [Network](network)
     - [SSH란 무엇일까요?](network/ssh)
-    - [CIDR](network/cidr)
+    - [[⚠️WIP] CIDR](network/cidr)
 - [Database](database)
     - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
     - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
