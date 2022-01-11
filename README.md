@@ -12,7 +12,7 @@
     - [[⚠️WIP] CIDR](network/cidr)
 - [Database](database)
     - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
-    - [[ACID #1] Transaction](database/acid/transaction)
+    - [[ACID #1] Transaction이란?](database/acid/transaction)
     - [[⚠️WIP] [ACID #2] Atomicity](database/acid/atomicity)
     - [[⚠️WIP] [ACID #3] Isolation](database/acid/isolation)
     - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
