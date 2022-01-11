@@ -1,4 +1,4 @@
-# Transaction이란?
+# [ACID #1] Transaction이란?
 
 트랜잭션이란 무엇일까요? 트랜잭션을 왜 사용할까요?
 
