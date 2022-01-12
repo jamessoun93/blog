@@ -1,5 +1,7 @@
 # SSH란 무엇일까요?
 
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/4)
+
 ## SSH란 무엇일까? SSH를 왜 사용할까? SSH의 장단점은? GitHub 계정 연동까지!
 
 다들 한 번쯤 SSH라는 단어를 들어보거나 본 적이 있을 것입니다.

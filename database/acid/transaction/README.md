@@ -1,5 +1,7 @@
 # [ACID #1] Transaction이란?
 
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/10)
+
 트랜잭션이란 무엇일까요? 트랜잭션을 왜 사용할까요?
 
 트랜잭션이란, 하나의 작업 단위로 처리되는 SQL 쿼리 모음입니다.

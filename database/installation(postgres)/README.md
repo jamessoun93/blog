@@ -1,4 +1,7 @@
 # PostgreSQL 설치하기 (MacOS)
+
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/9)
+
 MacOS에서 PostgreSQL을 설치하는 방법에 대해서 알아봅시다.
 
 ## 설치 Options
