@@ -18,4 +18,7 @@
     - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
 - [Data Structures](data-structures)
     - [Hash Table Implementation (JavsScript)](data-structures/hash-tables)
-    - [Linked Lists Implementations (JavaScript)](data-structures/linked-lists)
+    - [Linked Lists Implementations](data-structures/linked-lists)
+        - [Singly Linked List Implementation (JavaScript)](data-structures/linked-lists/singly-linked-list)
+        - [Doubly Linked List Implementation (JavaScript)](data-structures/linked-lists/doubly-linked-list)
+        - [Reverse a Linked List Implementation (JavaScript)](data-structures/linked-lists/reverse-a-linked-list)
