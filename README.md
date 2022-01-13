@@ -18,3 +18,4 @@
     - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
 - [Data Structures](data-structures)
     - [Hash Table Implementation (JavaScript)](data-structures/hash-tables)
+    - [Linked List Implementation (JavaScript)](data-structures/linked-list)
