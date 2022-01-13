@@ -22,3 +22,4 @@
         - [Singly Linked List Implementation (JavaScript)](data-structures/linked-lists/singly-linked-list)
         - [Doubly Linked List Implementation (JavaScript)](data-structures/linked-lists/doubly-linked-list)
         - [Reverse a Linked List Implementation (JavaScript)](data-structures/linked-lists/reverse-a-linked-list)
+    - [Stacks Implementation (JavaScript)](data-structures/stacks)
