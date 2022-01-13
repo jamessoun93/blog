@@ -23,3 +23,4 @@
         - [Doubly Linked List Implementation (JavaScript)](data-structures/linked-lists/doubly-linked-list)
         - [Reverse a Linked List Implementation (JavaScript)](data-structures/linked-lists/reverse-a-linked-list)
     - [Stack Implementation (JavaScript)](data-structures/stacks)
+    - [Queue Implementation (JavaScript)](data-structures/queues)
