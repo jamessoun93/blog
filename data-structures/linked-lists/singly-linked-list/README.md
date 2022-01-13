@@ -1,4 +1,4 @@
-# Linked List
+# Singly Linked List
 
 Singly Linked List 구현 코드
 
