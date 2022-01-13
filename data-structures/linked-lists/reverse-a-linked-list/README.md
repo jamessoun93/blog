@@ -1,6 +1,6 @@
 # Reverse a Linked List
 
-reverse 메소드 확인
+기존 구현했던 Singly Linked List 코드에 `reverse` 메소드 추가
 
 ## Implementation (JavaScript)
 ```js
