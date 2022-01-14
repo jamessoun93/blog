@@ -24,3 +24,5 @@
         - [Reverse a Linked List Implementation (JavaScript)](data-structures/linked-lists/reverse-a-linked-list)
     - [Stack Implementation (JavaScript)](data-structures/stacks)
     - [Queue Implementation (JavaScript)](data-structures/queues)
+    - [Tree Implementations](data-structures/trees)
+        - [Binary Search Tree Implementation (JavaScript)](data-structures/trees/binary-search-trees)
