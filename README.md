@@ -26,3 +26,4 @@
     - [Queue Implementation (JavaScript)](data-structures/queues)
     - [Tree Implementations](data-structures/trees)
         - [Binary Search Tree Implementation (JavaScript)](data-structures/trees/binary-search-trees)
+    - [Graph Implementation (JavaScript)](data-structures/graph)
