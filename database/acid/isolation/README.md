@@ -5,12 +5,12 @@
 이번 포스팅에서 **Isolation**에 대해 설명하면서 다룰 내용들은 아래와 같습니다.
 
 1. Read Phenomena
-2. Isolation Levels (격리수준)
+2. Isolation Levels (격리 수준)
 3. Database Implementation of Isolation
 
 Isolation 개념은 아래 질문과 연관이 있습니다.
 
-> Q) 과연 진행중인 트랜잭션 A는 동시에 진행중인 다른 트랜잭션들로 인해 생긴 데이터의 변화로 인해 영향을 받지 않나요?
+> Q) 과연 진행중인 트랜잭션 A는 동시에 진행중인 다른 트랜잭션들로 인해 생긴 데이터의 변화에 영향을 받지 않나요?
 
 그럼 시작해볼까요?
 
@@ -205,3 +205,50 @@ $180가 아닌 $155가 나오게 됩니다.
 트랜잭션 A에서 먼저 실행했던 [1]번 작업에서 PID 1의 QNT를 10만큼 더해 20으로 업데이트해줬던 내역은 트랜잭션 B의 [2]번 작업으로 인해 덮어씌워진 것입니다.
 
 이 현상을 바로 Lost Update라고 합니다.
+
+---
+
+## Isolation Levels
+트랜잭션을 사용할 때 생길 수 있는 문제점들에 대해 이해가 잘 되셨나요?
+
+Isolation Level은 이러한 Read Phenomena를 상황에 맞게 예방하기 위해 개발되었으며, 트랜잭션을 시작할 때 SQL문으로 직접 Isolation Level을 지정해줄 수 있습니다.
+
+그렇다면 이제 이런 **Read Phenomena**를 해결할 수 있는 방법인 여러개의 **Isolation Levels(격리 수준)**에 대해 알아보겠습니다.
+
+### 1. Read Uncommitted
+
+트랜잭션이 아예 격리가 되지 않는 Isolation Level입니다. 
+
+동시에 일어나는 트랜잭션간 COMMIT 여부와 상관없이 모든 변경사항을 확인할 수 있습니다.
+
+굉장히 좋지 못한 방법이겠죠? 하지만 그만큼 신경써야하는 부분이 없다는 뜻이니 속도는 빠를 수 있습니다.
+
+### 2. Read Committed
+
+트랜잭션 내 모든 쿼리는 다른 트랜잭션을 통해 정상적으로 COMMIT 된 데이터만 볼 수 있습니다.
+
+### 3. Repeatable Read
+
+트랜잭션 중 특정 row를 읽어들이는 쿼리를 실행한다면 해당 트랜잭션이 끝날때까지 읽어들인 row의 데이터는 변하지 않습니다.
+
+### 4. Snapshot
+
+트랜잭션 내 모든 쿼리는 해당 트랜잭션이 시작되었을 시점에 COMMIT된 상태의 데이터만 볼 수 있습니다.
+
+트랜잭션을 시작할 때 데이터베이스의 SNAPSHOT을 준비해두고 해당 SNAPSHOT을 활용하는 방법입니다.
+
+이 방법은 위에서 설명한 모든 Read Phenomena를 해결할 수 있는 방법입니다.
+
+### 5. Serializable
+
+가장 엄격한 Isolation Level입니다.
+
+단순 조회(SELECT) 작업에도 Shared Lock이 걸려 완벽하게 일관성있는 읽기 모드를 제공합니다.
+
+이 방법도 마찬가지로 위에서 설명한 모든 Read Phenomena를 해결할 수 있는 방법입니다.
+
+> 출처: https://en.wikipedia.org/wiki/Isolation_(database_systems)
+![iso-levels-read-phe](./images/isolation_levels_vs_read_phenomena.png)
+
+위 이미지에서 보이는 것과 같이 격리 수준이 높을수록 Read Phenomena로 인한 문제들을 더 많이 해결할 수 있습니다.
+
