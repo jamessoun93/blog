@@ -16,6 +16,7 @@
     - [[ACID #2] Atomicity란? 아토믹한 트랜잭션이란?](database/acid/atomicity)
     - [[ACID #3] Isolation이란? 트랜잭션의 격리 수준(isolation level)이란?](database/acid/isolation)
     - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
+    - [Validation & Constraints](database/validation-and-constraints)
 - [Amazon Web Services(AWS)](aws)
     - [[⚠️WIP] VPC](aws/vpc)
 - [Data Structures](data-structures)
