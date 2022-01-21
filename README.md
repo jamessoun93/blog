@@ -19,6 +19,8 @@
     - [Validation & Constraints](database/validation-and-constraints)
 - [Amazon Web Services(AWS)](aws)
     - [[⚠️WIP] VPC](aws/vpc)
+- [CI/CD](cicd)
+    - [GitHub Actions를 활용한 React App S3 배포](cicd/github-actions)
 - [Data Structures](data-structures)
     - [Hash Tables](data-structures/hash-tables)
     - [Linked Lists](data-structures/linked-lists)
