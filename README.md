@@ -23,7 +23,7 @@
     - [[⚠️WIP] VPC](aws/vpc)
     - [[⚠️WIP] AWS 인프라 구축해보기 (Simple Version)](aws/simple-infrastructure)
 - [CI/CD](cicd)
-    - [[⚠️WIP] GitHub Actions를 활용한 React App S3 배포](cicd/github-actions)
+    - [[⚠️WIP] GitHub Actions로 Amazon S3에 자동으로 배포하기](cicd/github-actions)
 - [Data Structures](data-structures)
     - [Hash Tables](data-structures/hash-tables)
     - [Linked Lists](data-structures/linked-lists)
