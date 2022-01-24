@@ -1,0 +1,1 @@
+# AWS 인프라 구축해보기 (Simple Version)

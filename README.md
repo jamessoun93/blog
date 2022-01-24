@@ -21,6 +21,7 @@
     - [[⚠️WIP] Index란 무엇일까요?](database/index)
 - [Amazon Web Services(AWS)](aws)
     - [[⚠️WIP] VPC](aws/vpc)
+    - [[⚠️WIP] AWS 인프라 구축해보기 (Simple Version)](aws/simple-infrastructure)
 - [CI/CD](cicd)
     - [[⚠️WIP] GitHub Actions를 활용한 React App S3 배포](cicd/github-actions)
 - [Data Structures](data-structures)
