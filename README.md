@@ -1,6 +1,6 @@
-# 개발이야기
+# blog
 
-어느 웹 개발자가 들려주는 개발이야기
+https://seunghyunson.tistory.com
 
 ## Table of contents
 
