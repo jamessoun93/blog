@@ -10,6 +10,8 @@ https://seunghyunson.tistory.com
 - [Network](network)
     - [SSH란 무엇일까요?](network/ssh)
     - [[⚠️WIP] CIDR](network/cidr)
+- [Infrastructure as Code (IaC)](iac)
+    - [[Terraform #1] 테라폼 초기세팅](iac/terraform)
 - [Database](database)
     - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
     - [[ACID #1] Transaction이란?](database/acid/transaction)
