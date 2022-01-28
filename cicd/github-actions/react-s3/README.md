@@ -1,4 +1,4 @@
-# GitHub Actions로 Amazon S3에 자동으로 배포하기
+# [GitHub Actions #2] GitHub Actions로 Amazon S3에 자동으로 배포하기
 
 React로 개발한 프론트엔드 SPA 어플리케이션을 Amazon S3로 호스팅할 때 수정사항 혹은 추가기능이 생길 때 어떻게 하시나요?  
 build 관련 파일들을 담고 있는 S3 버킷에 직접 들어가서 모든 컨텐츠를 지우고 새로 build한 결과물을 업로드하시나요?

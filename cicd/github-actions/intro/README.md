@@ -1,4 +1,4 @@
-# GitHub Actions란 무엇일까? CI/CD란 무엇일까?
+# [GitHub Actions #1] GitHub Actions란 무엇일까? CI/CD란 무엇일까?
 
 [Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/14)
 
