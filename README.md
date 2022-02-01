@@ -14,7 +14,7 @@ https://seunghyunson.tistory.com
     - [[ACID #3] Isolation이란? 트랜잭션의 격리 수준(isolation level)이란?](database/acid/isolation)
     - [INTERVAL을 이용한 시간 계산하기](database/interval)
     - [Validation & Constraints](database/validation-and-constraints)
-    - [[⚠️WIP] Postgres는 데이터를 어떻게 저장할까?](database/how-postgres-stores-data)
+    - [Postgres는 데이터를 어떻게 저장할까?](database/how-postgres-stores-data)
     - [[⚠️WIP] Index란 무엇일까요?](database/index)
     - [[⚠️WIP] 쿼리 성능 분석하기 (PostgreSQL)](database/analyzing-query-performance(postgres))
 - [Amazon Web Services(AWS)](aws)
