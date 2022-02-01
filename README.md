@@ -5,7 +5,7 @@ https://seunghyunson.tistory.com
 ## Table of contents
 
 - [Network](network)
-    - [SSH란 무엇일까요?](network/ssh)
+    - [SSH란 무엇일까?](network/ssh)
     - [[⚠️WIP] CIDR](network/cidr)
 - [Database](database)
     - [PostgreSQL 설치하기(MacOS)](database/installation(postgres))
@@ -15,7 +15,7 @@ https://seunghyunson.tistory.com
     - [INTERVAL을 이용한 시간 계산하기](database/interval)
     - [Validation & Constraints](database/validation-and-constraints)
     - [Postgres는 데이터를 어떻게 저장할까?](database/how-postgres-stores-data)
-    - [[⚠️WIP] Index란 무엇일까요?](database/index)
+    - [[⚠️WIP] Index란 무엇일까?](database/index)
     - [[⚠️WIP] 쿼리 성능 분석하기 (PostgreSQL)](database/analyzing-query-performance(postgres))
 - [Amazon Web Services(AWS)](aws)
     - [[⚠️WIP] VPC](aws/vpc)

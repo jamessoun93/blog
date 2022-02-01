@@ -1,4 +1,4 @@
-# SSH란 무엇일까요?
+# SSH란 무엇일까?
 
 [Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/4)
 
