@@ -12,7 +12,7 @@ https://seunghyunson.tistory.com
     - [[ACID #1] Transaction이란?](database/acid/transaction)
     - [[ACID #2] Atomicity란? 아토믹한 트랜잭션이란?](database/acid/atomicity)
     - [[ACID #3] Isolation이란? 트랜잭션의 격리 수준(isolation level)이란?](database/acid/isolation)
-    - [[⚠️WIP] INTERVAL을 이용한 시간 더하기와 빼기](database/interval)
+    - [INTERVAL을 이용한 시간 계산하기](database/interval)
     - [Validation & Constraints](database/validation-and-constraints)
     - [[⚠️WIP] Postgres는 데이터를 어떻게 저장할까?](database/how-postgres-stores-data)
     - [[⚠️WIP] Index란 무엇일까요?](database/index)
