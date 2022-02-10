@@ -48,13 +48,29 @@ Commit 메세지와 PR Template에는 해당 브랜치에 담긴 코드가 어�
 
 ---
 
-* 개발은 각자 로컬 환경에서 feature 브랜치 생성해서 작업.
-* feature 브랜치 PR은 최소 2-3명의 Peer Review가 있어야 Leader Review로 넘어감.
-* 최종 머지된 feature 브랜치의 output은 squash & rebase 된 형태로 develop 브랜치에 push 된다. (develop 브랜치는 staging 환경)
-* main 브랜치는 production 환경
-* 프로젝트마다 해당 환경에 맞게 구축되어 있는 CI/CD 파이프라인에 따른 빌드&테스트 자동화
+# Development Process
 
-## Deployment Process
+매 스프린트 티켓을 할당받아 `develop` 브랜치 기준으로 `feature` 브랜치를 생성합니다.  
+
+feature 브랜치명은 `feature/기능명`의 형태로 지어줍니다.
+
+해당 feature 브랜치에서 작성한 코드는 항상 업데이트된 `develop` 브랜치를 기준으로 squash & rebase를 해서 push 한 뒤 Pull Request를 생성합니다.
+
+(이어서)
+
+---
+
+# Deployment Process
+
+`develop` 브랜치에서 새로운 `release`를 만들 준비가 되면 `develop` 브랜치의 가장 최신 커밋에 해당하는 버전 `tag`를 추가한 뒤 push 합니다.
+
+```sh
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+---
+
 * develop 브랜치에 tag 달고 push
 * main 브랜치에서 release 생성 후 원하는 commit range cherry-pick
 * release PR 생성 후 pre-deployment checklist 추가 후 check thoroughly
