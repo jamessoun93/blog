@@ -183,7 +183,7 @@ SELECT pg_size_pretty(pg_relation_size('users'));
 SELECT pg_size_pretty(pg_relation_size('users_username_idx'));
 ```
 
-![10](./images/9.png)
+![10](./images/10.png)
 
 880kb 와 184kb 정도면 뭐 얼마되지도 않고 좋네~ 
 
