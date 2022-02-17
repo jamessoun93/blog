@@ -2,12 +2,6 @@
 
 (INTRO)
 
-(예제로 쓸 SQL 쿼리문)
-```sql
-SELECT *
-FROM users
-WHERE username = 'jamessoun93';
-```
 # Query Processing Pipeline
 **Query Processing Pipeline**이란 우리가 작성한 SQL 쿼리문을 실행한 뒤 결과를 볼 때까지 Postgres 내부에서 거치는 과정들입니다.
 
@@ -20,7 +14,13 @@ Parser Stage는 제공된 SQL문의 단어 하나하나를 확인하여 올바�
 
 위에서 작성한 SQL문을 읽어들여 컴퓨터 프로그램이 이해할 수 있는 논리적 단계 형태로 만드는 작업입니다.
 
-예를 들면,
+```sql
+SELECT *
+FROM users
+WHERE username = 'jamessoun93';
+```
+
+위 SQL 쿼리를 가지고 예를 들면,
 * 가장 먼저 보이는 `SELECT`문은 트리 상단에 `"SelectStmt"` 그리고 `*` 즉 모든 컬럼을 뜻하는 `"ColumnRef"`, `"A_Star"`의 형태로 변환됩니다.
 * `FROM`은 `"fromClause"`, 테이블명인 `users`는 **Postgres**에서 테이블명(relation명)을 뜻하는 `relname`을 이용하여 `"relname"=>"users"`의 형태로 변환됩니다.
 * `WHERE`도 마찬가지로 `"whereClause"`, `"str" => "="`, `"columnRef"`, `"str" => "username"`, `"str" => "Jamessoun93"`의 형태로 변환됩니다.
@@ -43,6 +43,17 @@ Planner는 앞 스테이지에서 넘겨받은 쿼리 트리를 통해 어떤 �
 # 쿼리 성능 파악하기
 
 위의 Query Processing Pipeline 중 우리가 집중해야할 부분은 Planner 단계이고, 이 단계를 분석하여 슬로우 쿼리를 파악하고 튜닝할 수 있습니다.
+
+여기서 예시로 쓸 SQL 쿼리문은 아래와 같습니다.
+
+```sql
+SELECT username, contents
+FROM users
+JOIN comments ON comments.user_id = users.id
+WHERE username = 'Jamessoun93';
+```
+
+`users`와 `comments`를 `INNER JOIN` 하여 `username`이 `Jamessoun93`인 유저가 작성한 댓글의 내용을 `username`과 함께 가져오는 쿼리입니다.
 
 먼저, 쿼리 성능 분석의 기초인 키워드 두개를 소개드리겠습니다.
 
@@ -162,12 +173,34 @@ WHERE username = 'jamessoun93';
 
 위에서 **Query Processing Pipeline**에 대해 설명하면서, **Planner** 단계에서는 해당 쿼리에 대한 결과 데이터를 가져오기 위한 여러가지 방법 중 가장 빠르고 효율적인 방법을 파악해 선택한다고 설명했습니다.
 
-여기서는 `username`을 기준으로 찾아야하니 `username` 컬럼을 기준으로 생성한 index가 존재한다면 해당 **index를 사용하는 방법**과 users 테이블 데이터를 담고 있는 heap file에서 page(block)마다 담고 있는 데이터를 하나하나 확인하여 **Full Table Scan을 하는 방법**이 있습니다.
+여기서는 `username`을 기준으로 찾아야하니 `username` 컬럼을 기준으로 생성한 index가 존재한다면 해당 **Index를 사용하는 방법**과 users 테이블 데이터를 담고 있는 heap file에서 page(block)마다 담고 있는 데이터를 하나하나 확인하여 **Sequential Scan(Full Table Scan)을 하는 방법**이 있습니다.
 
 (데이터베이스 인덱스에 대해 잘 모른다면 [Database Index란?](https://seunghyunson.tistory.com/19)을 읽어보는걸 추천합니다.)
 
-Index의 개념을 알고있다면 이 경우에는 username index를 활용하는 방법을 택할 것입니다.
-
-하지만 Planner 단계에서 실제로 두가지 옵션 다 실행을 해본 뒤 결과값을 가지고 비교하지 않고 index가 더 빠른지 어떻게 계산할까요?
+Planner는 둘 중 어떤 옵션이 더 효율적인지 두 가지 옵션을 실제로 실행하지 않고 어떻게 판단할까요?
 
 지금부터 planner 단계에서 어떤 방식으로 두 가지 방법에 대한 cost를 비교하는지 알아보겠습니다.
+
+우선 `comments` 테이블에 대한 **Sequential Scan**을 진행하는 쿼리 노드부터 살펴보겠습니다.
+
+![8](./images/8.png)
+
+`comments` 테이블에 존재하는 모든 데이터를 확인해야하니 스텝은 아래와 같습니다.
+
+1. comments 테이블 데이터를 담고 있는 heap file을 엽니다.
+2. 첫 번째 page(block)부터 모든 row data를 하나하나 확인하여 필요한 작업을 진행한다.
+3. 다음에 오는 page(block)마다 2번 스텝을 반복한다.
+
+이 모든 작업을 처리하는데 드는 비용을 계산하기 위해 `comments` 테이블에 존재하는 rows 수와 page(block) 수를 확인합니다.
+
+```sql
+SELECT relpages FROM pg_class WHERE relname = 'comments';
+```
+
+![9](./images/9.png)
+
+```sql
+SELECT COUNT(*) FROM comments;
+```
+
+![10](./images/10.png)
