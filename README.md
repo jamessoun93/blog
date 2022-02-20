@@ -48,5 +48,4 @@ https://seunghyunson.tistory.com
         - [Binary Search Trees](data-structures/trees/binary-search-trees)
     - [Graphs](data-structures/graphs)
 - [Growing Pains](growing-pains)
-    - [[⚠️WIP] [성장통 시리즈 #1] 사내 Internal API 개선기](growing-pains/1-internalapi-개선기)
-    - [[⚠️WIP] [성장통 시리즈 #2] 사내 Internal API Unit Test 개선기](growing-pains/2-internalapi-unittest-개선기)
+    - [MySQL Version 문제](growing-pains/mysql-version-문제)

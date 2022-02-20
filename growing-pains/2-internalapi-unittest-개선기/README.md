@@ -1,1 +1,0 @@
-# [성장통 시리즈 #2] 사내 Internal API Unit Test 개선 작업
