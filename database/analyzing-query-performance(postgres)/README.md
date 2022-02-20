@@ -166,9 +166,10 @@ WHERE tablename = 'users';
 아래 쿼리문을 다시 한번 가져왔습니다.
 
 ```sql
-SELECT *
+SELECT username, contents
 FROM users
-WHERE username = 'jamessoun93';
+JOIN comments ON comments.user_id = users.id
+WHERE username = 'Jamessoun93';
 ```
 
 위에서 **Query Processing Pipeline**에 대해 설명하면서, **Planner** 단계에서는 해당 쿼리에 대한 결과 데이터를 가져오기 위한 여러가지 방법 중 가장 빠르고 효율적인 방법을 파악해 선택한다고 설명했습니다.
@@ -185,22 +186,70 @@ Planner는 둘 중 어떤 옵션이 더 효율적인지 두 가지 옵션을 실
 
 ![8](./images/8.png)
 
+위 SQL 쿼리문에 대한 `EXPLAIN ANALYZE` 결과물(쿼리 플랜)의 3번 노드에 해당하는 부분입니다.
+
+![9](./images/9.png)
+
 `comments` 테이블에 존재하는 모든 데이터를 확인해야하니 스텝은 아래와 같습니다.
 
-1. comments 테이블 데이터를 담고 있는 heap file을 엽니다.
-2. 첫 번째 page(block)부터 모든 row data를 하나하나 확인하여 필요한 작업을 진행한다.
-3. 다음에 오는 page(block)마다 2번 스텝을 반복한다.
+1. comments 테이블 데이터를 담고 있는 heap file을 연다.
+2. 첫 번째 page(block)부터 읽어들이기 위해 load 한다.
+3. 첫 번째 page(block)부터 순서대로 존재하는 모든 row data를 하나하나 확인하여 필요한 작업을 진행한다.
+4. 다음에 오는 page(block)마다 2번 스텝을 반복한다.
 
-이 모든 작업을 처리하는데 드는 비용을 계산하기 위해 `comments` 테이블에 존재하는 rows 수와 page(block) 수를 확인합니다.
+이 모든 작업을 처리하는데 드는 비용을 계산하기 위해 `comments` 테이블에 존재하는 **rows** 수와 **page(block)** 수를 확인합니다.
 
 ```sql
 SELECT relpages FROM pg_class WHERE relname = 'comments';
 ```
 
-![9](./images/9.png)
+![10](./images/10.png)
 
 ```sql
 SELECT COUNT(*) FROM comments;
 ```
 
-![10](./images/10.png)
+![11](./images/11.png)
+
+comments 테이블에는 총 985개의 page와 60410개의 row가 존재하는것을 확인할 수 있습니다.
+
+우리가 계산하려고 하는 전체 비용은 **985개의 page를 load하는 비용**과 **60410개의 row를 처리하는 비용**을 합한 값입니다.  
+```
+(# of pages) * (1개의 page를 load하는 cost) + (# of rows) * (1개의 row를 처리하는 cost)
+```
+
+하나의 page를 load하는 비용과 하나의 row를 처리하는 비용을 추정치로 잡은 뒤 갯수만큼 곱한 뒤 합산해야 한다는 뜻이죠.
+
+그런데 page를 load하는 비용과 row를 처리하는 비용을 어떻게 알 수 있을까요?
+
+정확하게 계산하기는 어렵지만 어림잡아 계산할 수는 있습니다.
+
+page는 한 테이블에 대한 heap file안에 저장되고 이뜻은 우리 컴퓨터에 존재하는 물리적인 공간안에 데이터의 형태로 자리를 잡고 있다는 뜻이죠.
+
+그렇다면 page를 load하는 과정은 실제 컴퓨터의 저장장치로부터 읽어들이는 작업이 필요합니다.
+
+반면에 이미 load한 뒤 정렬된 row data를 처리하는 과정은 page를 load하는 과정보다는 훨씬 빠르고 가볍습니다.
+
+그래서 page를 load하는 과정의 비용이 `1`이라 가정하고 row를 처리하는 비용이 약 100배 작은 `0.01`이라고 가정해봅시다.
+
+위 계산식을 적용해보면 `1589.1` 라는 값이 나옵니다.
+
+```
+(985) * (1.0) + (60410) * (0.01) = 1589.1
+```
+
+자, 이 `1589.1` 이라는 값으로 우리가 무엇을 할 수 있을까요?
+
+여기서 잠시 `EXPLAIN ANALYZE`가 보여준 Query Plan을 살펴보겠습니다.
+
+![12](./images/12.png)
+
+3번 Sequential Scan 노드의 cost 부분에 `1589.1` 이라는 값이 보이시나요?!
+
+어떻게 이게 가능할 수 있을까요? 위에서 분명 정확한 값을 알 수 없어 어림잡아 계산을 했었는데 말이죠.
+
+그 이유는 Query Plan에서 보여주는 각 노드의 cost는 실제 cost가 아닌 다른 작업들을 수행하는데 드는 cost에 대한 상대값이기 때문입니다.
+
+CPU를 얼마나 잡아먹는지 메모리를 얼마나 잡아먹는지 수치로 계산한게 아닌 특정 작업이 다른 작업들에 비해 몇배의 비용이 드는가를 기준으로 계산한 비용이라는 뜻입니다.
+
+[Planner Cost Constants (플래너 비용 상수)](https://www.postgresql.org/docs/current/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS)
