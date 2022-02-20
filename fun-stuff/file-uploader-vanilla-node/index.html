@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Uploader</title>
+</head>
+<body>
+  <h1>File Uploader</h1>
+  File: <input type="file" id="f">
+  <button id="btnUpload">Read & Upload</button>
+  <div id="divOutput">
+
+  </div>
+  <script>
+    const btnUpload = document.getElementById("btnUpload");
+    const divOutput = document.getElementById("divOutput");
+    const f = document.getElementById("f");
+
+    btnUpload.addEventListener("click", () => {
+      const fileReader = new FileReader();
+      const file = f.files[0];
+
+      fileReader.onload = async e => {
+        const CHUNK_SIZE = 5000;
+        const chunkCnt = e.target.result.byteLength/CHUNK_SIZE; // remainder 생각해야함
+        console.log("Read Successfully");
+
+        const fileName = Math.random() * 1000 + file.name;
+
+        for (let chunkId = 0; chunkId < chunkCnt + 1; chunkId++){ // 그래서 여기서 chunkCnt + 1 해줌
+          /*
+            (0, 1000)
+            (1000, 2000)
+            (2000, 3000) and so on
+          */
+          const chunk = e.target.result.slice(chunkId * CHUNK_SIZE, chunkId * CHUNK_SIZE + 1000);
+          await fetch("http://localhost:8080/upload", {
+            "method": "POST",
+            "headers": {
+              "content-type": "application/octet-stream",
+              "content-length": chunk.length,
+              "file-name": fileName // FIXME: 커스텀 헤더 막는 프록시서버 많아서 이건 좋지 않은 방법
+            },
+            "body": chunk
+          })
+          divOutput.textContent = Math.round(chunkId / chunkCnt * 100, 0) + "%";
+        }
+        console.log(e.target.result.byteLength);
+      }
+      fileReader.readAsArrayBuffer(file); // async call
+    })
+  </script>
+</body>
+</html>
