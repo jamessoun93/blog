@@ -154,7 +154,7 @@ WHERE tablename = 'users';
 
 이렇게 **EXPLAIN**과 **EXPLAIN ANALYZE**를 활용해 실행 계획을 분석하여 더 효율적인 방법을 찾아 전체적인 성능을 개선할 수 있습니다.
 
-## Cost 계산하기
+# Cost 계산하기
 
 그렇다면 위의 Planner 단계에서 생성한 query plan을 활용하여 구체적으로 어떻게 효율을 계산해서 비교할 수 있을까요?
 
@@ -193,7 +193,7 @@ Planner는 둘 중 어떤 옵션이 더 효율적인지 두 가지 옵션을 실
 `comments` 테이블에 존재하는 모든 데이터를 확인해야하니 스텝은 아래와 같습니다.
 
 1. comments 테이블 데이터를 담고 있는 heap file을 연다.
-2. 첫 번째 page(block)부터 읽어들이기 위해 load 한다.
+2. 첫 번째 page(block)부터 읽어들이기 위해 순서대로 load 한다.
 3. 첫 번째 page(block)부터 순서대로 존재하는 모든 row data를 하나하나 확인하여 필요한 작업을 진행한다.
 4. 다음에 오는 page(block)마다 2번 스텝을 반복한다.
 
@@ -211,7 +211,7 @@ SELECT COUNT(*) FROM comments;
 
 ![11](./images/11.png)
 
-comments 테이블에는 총 985개의 page와 60410개의 row가 존재하는것을 확인할 수 있습니다.
+`comments` 테이블에는 총 985개의 page와 60410개의 row가 존재하는것을 확인할 수 있습니다.
 
 우리가 계산하려고 하는 전체 비용은 **985개의 page를 load하는 비용**과 **60410개의 row를 처리하는 비용**을 합한 값입니다.  
 ```
@@ -244,7 +244,7 @@ page는 한 테이블에 대한 heap file안에 저장되고 이뜻은 우리 �
 
 ![12](./images/12.png)
 
-3번 Sequential Scan 노드의 cost 부분에 `1589.1` 이라는 값이 보이시나요?!
+3번 **Sequential Scan** 노드의 **cost** 부분에 `1589.1` 이라는 값이 보이시나요?!
 
 어떻게 이게 가능할 수 있을까요? 위에서 분명 정확한 값을 알 수 없어 어림잡아 계산을 했었는데 말이죠.
 
@@ -252,4 +252,43 @@ page는 한 테이블에 대한 heap file안에 저장되고 이뜻은 우리 �
 
 CPU를 얼마나 잡아먹는지 메모리를 얼마나 잡아먹는지 수치로 계산한게 아닌 특정 작업이 다른 작업들에 비해 몇배의 비용이 드는가를 기준으로 계산한 비용이라는 뜻입니다.
 
-[Planner Cost Constants (플래너 비용 상수)](https://www.postgresql.org/docs/current/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS)
+이런 값들을 Planner Cost Constants (직역하면 플래너 비용 상수) 라고 부르고 각 constant의 default 값은 [PostgreSQL 공식문서](https://www.postgresql.org/docs/current/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS)에 정리되어 있습니다.
+
+예시로 몇가지만 살펴보겠습니다.
+
+![13](./images/13.png)
+
+`seq_page_cost` 상수는 heap file로부터 page들을 순차적으로 가져오는 작업을 할 때 한개의 page를 가져올 때의 비용을 뜻하고 기본값이 `1.0`으로 설정되어 있습니다.
+
+![14](./images/14.png)
+
+`random_page_cost` 상수는 heap file로 부터 page들을 순차적으로가 아닌 랜덤하게 가져올 때 한개의 page를 가져올 때의 비용을 뜻하고 기본값이 `4.0`으로 설정되어 있습니다.
+
+여기서 이 `4.0`이라는 상수값은 바로 위에서 봤던 `seq_page_cost`와 비교한 상대값입니다. (랜덤 page를 가져오는 작업이 page를 순서대로 읽어들이는 작업의 4배정도 비용이 든다는 뜻이겠죠.)
+
+이 두가지 외 모든 상수값들도 값이 `1.0`인 `seq_page_cost`를 기준으로 비교한 값입니다.
+
+이 constant들을 사용하여 특정 쿼리 노드의 cost를 계산하기 위해서는 아래 식을 이용하면 됩니다.
+
+```
+COST = (# pages read sequentially) * seq_page_cost 
+       + (# pages read at random) * random_page_cost 
+       + (# rows scanned) * cpu_tuple_cost 
+       + (# index entries scanned) * cpu_index_tuple_cost 
+       + (# times function/operator evaluated) * cpu_operator_cost
+```
+
+`(특정 작업을 진행하는 대상의 숫자) * (해당 작업에 대한 cost constant)`를 전부 더한 값이 됩니다.
+
+(물론 위 공식에 나와있는 부분만 가지고 실제 전체 cost를 계산할 수 있는것은 아니지만 query plan을 계산하는 단계에서는 이 정도로 충분합니다.)
+
+조금 위에서 직접 계산해봤던 `comments` 테이블에 대한 sequential scan을 제공된 cost constant들을 위 식에 대입하여 계산해본다면,
+
+랜덤 페이지를 가져오는 작업, 인덱스를 scan하는 작업, 연산 작업이 없기 때문에 `0`으로 계산되어 아래와 같이 순차적으로 page를 읽어들이는 비용과 row들을 scan하는 비용을 더한 값이 해당 쿼리 노드의 cost가 됩니다.
+
+```
+COST = (# pages read sequentially) * seq_page_cost
+       + (# rows scanned) * cpu_tuple_cost
+```
+
+그래서 실제로 비용 계산 공식을 찾아보면 위 두가지만 가지고 계산하는 예시가 많습니다.
