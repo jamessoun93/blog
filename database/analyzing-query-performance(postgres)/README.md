@@ -1,8 +1,19 @@
 # 쿼리 성능 분석하기 (PostgreSQL)
 
+## Table of Contents
+- [1. Query Processing Pipeline](#1-query-processing-pipeline)
+- [2. 쿼리 성능 파악하기](#2-쿼리-성능-파악하기)
+  - [EXPLAIN](#explain)
+  - [EXPLAIN ANALYZE](#explain-analyze)
+  - [EXPLAIN ANALYZE 결과 분석하기](#explain-analyze-결과-분석하기)
+- [3. Cost 계산하기](#3-cost-계산하기)
+  - [Sequential Scan 비용 어림잡아 계산해보기](#sequential-scan-비용-어림잡아-계산해보기)
+  - [Planner Cost Constants](#planner-cost-constants)
+  - [Equation](#equation)
+
 (INTRO)
 
-# Query Processing Pipeline
+# 1. Query Processing Pipeline
 **Query Processing Pipeline**이란 우리가 작성한 SQL 쿼리문을 실행한 뒤 결과를 볼 때까지 Postgres 내부에서 거치는 과정들입니다.
 
 쿼리 성능을 분석하기 전에 내부 동작 과정을 간단하게라도 파악하고 넘어가면 분석 단계에서 더 많은 도움이 되겠죠?
@@ -40,7 +51,7 @@ Planner는 앞 스테이지에서 넘겨받은 쿼리 트리를 통해 어떤 �
 
 ---
 
-# 쿼리 성능 파악하기
+# 2. 쿼리 성능 파악하기
 
 위의 Query Processing Pipeline 중 우리가 집중해야할 부분은 Planner 단계이고, 이 단계를 분석하여 슬로우 쿼리를 파악하고 튜닝할 수 있습니다.
 
@@ -60,7 +71,7 @@ WHERE username = 'Jamessoun93';
 1. `EXPLAIN`
 2. `EXPLAIN ANALYZE`
 
-### EXPLAIN
+## EXPLAIN
 `EXPLAIN`은 query plan을 생성해 여러가지 정보를 제공합니다.  
 하지만 실제로 EXPLAIN 뒤에 오는 쿼리를 **실행하지는 않습니다.**
 
@@ -73,7 +84,7 @@ WHERE username = 'Jamessoun93';
 
 ![explain](./images/1.png)
 
-### EXPLAIN ANALYZE
+## EXPLAIN ANALYZE
 `EXPLAIN ANALYZE`도 마찬가지로 query plan을 생성하여 여러가지 정보를 제공합니다.  
 하지만 `EXPLAIN`과는 다르게 **실제 쿼리를 호출한 뒤 쿼리를 실행하는데 걸린 시간 등을 포함한 통계를 제공합니다.**
 
@@ -154,7 +165,9 @@ WHERE tablename = 'users';
 
 이렇게 **EXPLAIN**과 **EXPLAIN ANALYZE**를 활용해 실행 계획을 분석하여 더 효율적인 방법을 찾아 전체적인 성능을 개선할 수 있습니다.
 
-# Cost 계산하기
+---
+
+# 3. Cost 계산하기
 
 그렇다면 위의 Planner 단계에서 생성한 query plan을 활용하여 구체적으로 어떻게 효율을 계산해서 비교할 수 있을까요?
 
@@ -182,7 +195,9 @@ Planner는 둘 중 어떤 옵션이 더 효율적인지 두 가지 옵션을 실
 
 지금부터 planner 단계에서 어떤 방식으로 두 가지 방법에 대한 cost를 비교하는지 알아보겠습니다.
 
-우선 `comments` 테이블에 대한 **Sequential Scan**을 진행하는 쿼리 노드부터 살펴보겠습니다.
+## Sequential Scan 비용 어림잡아 계산해보기
+
+`comments` 테이블에 대한 **Sequential Scan**을 진행하는 쿼리 노드를 살펴보겠습니다.
 
 ![8](./images/8.png)
 
@@ -211,9 +226,10 @@ SELECT COUNT(*) FROM comments;
 
 ![11](./images/11.png)
 
-`comments` 테이블에는 총 985개의 page와 60410개의 row가 존재하는것을 확인할 수 있습니다.
+`comments` 테이블에는 총 **985개**의 page와 **60410개**의 row가 존재하는것을 확인할 수 있습니다.
 
 우리가 계산하려고 하는 전체 비용은 **985개의 page를 load하는 비용**과 **60410개의 row를 처리하는 비용**을 합한 값입니다.  
+
 ```
 (# of pages) * (1개의 page를 load하는 cost) + (# of rows) * (1개의 row를 처리하는 cost)
 ```
@@ -252,6 +268,8 @@ page는 한 테이블에 대한 heap file안에 저장되고 이뜻은 우리 �
 
 CPU를 얼마나 잡아먹는지 메모리를 얼마나 잡아먹는지 수치로 계산한게 아닌 특정 작업이 다른 작업들에 비해 몇배의 비용이 드는가를 기준으로 계산한 비용이라는 뜻입니다.
 
+## Planner Cost Constants
+
 이런 값들을 Planner Cost Constants (직역하면 플래너 비용 상수) 라고 부르고 각 constant의 default 값은 [PostgreSQL 공식문서](https://www.postgresql.org/docs/current/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS)에 정리되어 있습니다.
 
 예시로 몇가지만 살펴보겠습니다.
@@ -267,6 +285,8 @@ CPU를 얼마나 잡아먹는지 메모리를 얼마나 잡아먹는지 수치�
 여기서 이 `4.0`이라는 상수값은 바로 위에서 봤던 `seq_page_cost`와 비교한 상대값입니다. (랜덤 page를 가져오는 작업이 page를 순서대로 읽어들이는 작업의 4배정도 비용이 든다는 뜻이겠죠.)
 
 이 두가지 외 모든 상수값들도 값이 `1.0`인 `seq_page_cost`를 기준으로 비교한 값입니다.
+
+## Equation
 
 이 constant들을 사용하여 특정 쿼리 노드의 cost를 계산하기 위해서는 아래 식을 이용하면 됩니다.
 
@@ -292,3 +312,8 @@ COST = (# pages read sequentially) * seq_page_cost
 ```
 
 그래서 실제로 비용 계산 공식을 찾아보면 위 두가지만 가지고 계산하는 예시가 많습니다.
+
+## Startup Cost vs Total Cost
+
+![15](./images/15.png)
+

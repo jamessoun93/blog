@@ -3,7 +3,7 @@
 배우고 나누고 싶은 것들을 기록하는 곳입니다.  
 https://seunghyunson.tistory.com
 
-## Table of contents
+## Table of Contents
 
 - [Network](network)
     - [SSH란 무엇일까?](network/ssh)
