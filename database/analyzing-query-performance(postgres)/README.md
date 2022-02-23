@@ -1,5 +1,7 @@
 # 쿼리 성능 분석하기 (PostgreSQL)
 
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/20)
+
 ## Table of Contents
 - [1. Query Processing Pipeline](#1-query-processing-pipeline)
 - [2. 쿼리 성능 파악하기](#2-쿼리-성능-파악하기)
@@ -11,17 +13,13 @@
   - [Planner Cost Constants](#planner-cost-constants)
   - [Equation](#equation)
 
-(INTRO)
-
 # 1. Query Processing Pipeline
 **Query Processing Pipeline**이란 우리가 작성한 SQL 쿼리문을 실행한 뒤 결과를 볼 때까지 Postgres 내부에서 거치는 과정들입니다.
 
 쿼리 성능을 분석하기 전에 내부 동작 과정을 간단하게라도 파악하고 넘어가면 분석 단계에서 더 많은 도움이 되겠죠?
 
 ## Parser (Stage)
-Parser Stage는 제공된 SQL문의 단어 하나하나를 확인하여 올바른 문법으로 작성되었는지 확인하는 단계이고 그 과정은 아래와 같습니다.
-
-### 1. 먼저 제공된 SQL문을 tree 형태로 만듭니다.
+Parser Stage는 제공된 SQL문의 단어 하나하나를 확인하여 올바른 문법으로 작성되었는지 확인하는 단계이고 제공된 SQL문을 tree 형태로 만듭니다.
 
 위에서 작성한 SQL문을 읽어들여 컴퓨터 프로그램이 이해할 수 있는 논리적 단계 형태로 만드는 작업입니다.
 
@@ -39,7 +37,7 @@ WHERE username = 'jamessoun93';
 (실제 Parser Stage의 결과 전체가 아닌 이해할 수 있는 부분들만 가져온 것이니 참고해주세요.)
 
 ## Rewriter
-(View 부분)
+View 부분
 
 ## Planner
 Planner는 앞 스테이지에서 넘겨받은 쿼리 트리를 통해 어떤 데이터를 가져와야 하는지 확인한 뒤, 해당 데이터를 가져오기 위한 여러가지 방법 중 가장 빠르고 효율적인 방법을 파악합니다.
@@ -133,7 +131,7 @@ WHERE username = 'Jamessoun93';
 
 이상하지 않나요?
 
-**EXPLAIN**은 **EXPLAIN ANALYZE**와 달리 쿼리를 실행하지 않아서 실제 데이터에 접근을 하지 않았을텐데 예상 rows와 width를 어떻게 포함하고 있는걸까요?
+**EXPLAIN**은 **EXPLAIN ANALYZE**와 달리 쿼리를 실행하지 않아서 실제 데이터에 접근을 하지 않았을 텐데 예상 rows와 width를 어떻게 포함하고 있는 걸까요?
 
 **Postgres**가 테이블 내부에 존재하는 데이터에 대한 정보가 없는 상황에서 각 스텝을 실행하는 데 걸리는 시간을 어떻게 예측할 수 있을까요?
 
@@ -151,7 +149,7 @@ WHERE tablename = 'users';
 
 `pg-stats`라는 테이블에서 `users` 테이블에 대한 데이터만 가져온 결과입니다.
 
-이 테이블에는 각 컬럼별로 여러가지 데이터를 종합하고 있습니다.
+이 테이블에는 각 컬럼 별로 여러가지 데이터를 종합하고 있습니다.
 
 - 컬럼별 평균 byte 수(`avg_width`)
 - 가장 자주 등장하는 값(`most_common_vals`)
@@ -159,9 +157,9 @@ WHERE tablename = 'users';
 
 등등 많은 데이터를 저장하고 있습니다.
 
-**Postgres**는 이 테이블 내 데이터를 통해서 **쿼리 계획(Query Plan)** 의 각 단계에서 필요한 예상값을 계산할 수 있기 때문에 실제 쿼리 호출을 하지 않더라도 예상값을 반환할 수 있었던 것입니다.
+**Postgres**는 이 테이블 내 데이터를 통해서 **쿼리 계획(Query Plan)** 의 각 단계에서 필요한 예상 값을 계산할 수 있기 때문에 실제 쿼리 호출을 하지 않더라도 예상 값을 반환할 수 있었던 것입니다.
 
-위에서 봤던 **Hash Join**의 평균 width 값은 `users` 테이블의 `username` 컬럼의 평균 width 값인 `13`과 `comments` 테이블의 `contents` 컬럼의 평균 값인 `68`을 더해 `81`이 반환된 것이죠.
+위에서 봤던 **Hash Join**의 평균 width 값은 `users` 테이블의 `username` 컬럼의 평균 width 값인 `13`과 `comments` 테이블의 `contents` 컬럼의 평균값인 `68`을 더해 `81`이 반환된 것이죠.
 
 이렇게 **EXPLAIN**과 **EXPLAIN ANALYZE**를 활용해 실행 계획을 분석하여 더 효율적인 방법을 찾아 전체적인 성능을 개선할 수 있습니다.
 
@@ -226,27 +224,27 @@ SELECT COUNT(*) FROM comments;
 
 ![11](./images/11.png)
 
-`comments` 테이블에는 총 **985개**의 page와 **60410개**의 row가 존재하는것을 확인할 수 있습니다.
+`comments` 테이블에는 총 **985개**의 page와 **60410개**의 row가 존재하는 것을 확인할 수 있습니다.
 
-우리가 계산하려고 하는 전체 비용은 **985개의 page를 load하는 비용**과 **60410개의 row를 처리하는 비용**을 합한 값입니다.  
+우리가 계산하려고 하는 전체 비용은 **985개의 page를 load 하는 비용**과 **60410개의 row를 처리하는 비용**을 합한 값입니다.  
 
 ```
-(# of pages) * (1개의 page를 load하는 cost) + (# of rows) * (1개의 row를 처리하는 cost)
+(# of pages) * (1개의 page를 load 하는 cost) + (# of rows) * (1개의 row를 처리하는 cost)
 ```
 
-하나의 page를 load하는 비용과 하나의 row를 처리하는 비용을 추정치로 잡은 뒤 갯수만큼 곱한 뒤 합산해야 한다는 뜻이죠.
+하나의 page를 load 하는 비용과 하나의 row를 처리하는 비용을 추정치로 잡은 뒤 갯수만큼 곱한 뒤 합산해야 한다는 뜻이죠.
 
-그런데 page를 load하는 비용과 row를 처리하는 비용을 어떻게 알 수 있을까요?
+그런데 page를 load 하는 비용과 row를 처리하는 비용을 어떻게 알 수 있을까요?
 
 정확하게 계산하기는 어렵지만 어림잡아 계산할 수는 있습니다.
 
-page는 한 테이블에 대한 heap file안에 저장되고 이뜻은 우리 컴퓨터에 존재하는 물리적인 공간안에 데이터의 형태로 자리를 잡고 있다는 뜻이죠.
+page는 한 테이블에 대한 heap file안에 저장되고 이 뜻은 우리 컴퓨터에 존재하는 물리적인 공간 안에 데이터의 형태로 자리를 잡고 있다는 뜻이죠.
 
-그렇다면 page를 load하는 과정은 실제 컴퓨터의 저장장치로부터 읽어들이는 작업이 필요합니다.
+그렇다면 page를 load 하는 과정은 실제 컴퓨터의 저장장치로부터 읽어 들이는 작업이 필요합니다.
 
-반면에 이미 load한 뒤 정렬된 row data를 처리하는 과정은 page를 load하는 과정보다는 훨씬 빠르고 가볍습니다.
+반면에 이미 load 한 뒤 정렬된 row data를 처리하는 과정은 page를 load 하는 과정보다는 훨씬 빠르고 가볍습니다.
 
-그래서 page를 load하는 과정의 비용이 `1`이라 가정하고 row를 처리하는 비용이 약 100배 작은 `0.01`이라고 가정해봅시다.
+그래서 page를 load 하는 과정의 비용이 `1`이라 가정하고 row를 처리하는 비용이 약 100배 작은 `0.01`이라고 가정해봅시다.
 
 위 계산식을 적용해보면 `1589.1` 라는 값이 나옵니다.
 
@@ -266,25 +264,25 @@ page는 한 테이블에 대한 heap file안에 저장되고 이뜻은 우리 �
 
 그 이유는 Query Plan에서 보여주는 각 노드의 cost는 실제 cost가 아닌 다른 작업들을 수행하는데 드는 cost에 대한 상대값이기 때문입니다.
 
-CPU를 얼마나 잡아먹는지 메모리를 얼마나 잡아먹는지 수치로 계산한게 아닌 특정 작업이 다른 작업들에 비해 몇배의 비용이 드는가를 기준으로 계산한 비용이라는 뜻입니다.
+CPU를 얼마나 잡아먹는지 메모리를 얼마나 잡아먹는지 수치로 계산한 게 아닌 특정 작업이 다른 작업들에 비해 몇 배의 비용이 드는가를 기준으로 계산한 비용이라는 뜻입니다.
 
 ## Planner Cost Constants
 
-이런 값들을 Planner Cost Constants (직역하면 플래너 비용 상수) 라고 부르고 각 constant의 default 값은 [PostgreSQL 공식문서](https://www.postgresql.org/docs/current/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS)에 정리되어 있습니다.
+이런 값들을 Planner Cost Constants (직역하면 플래너 비용 상수)라고 부르고 각 constant의 default 값은 [PostgreSQL 공식문서](https://www.postgresql.org/docs/current/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS)에 정리되어 있습니다.
 
-예시로 몇가지만 살펴보겠습니다.
+예시로 몇 가지만 살펴보겠습니다.
 
 ![13](./images/13.png)
 
-`seq_page_cost` 상수는 heap file로부터 page들을 순차적으로 가져오는 작업을 할 때 한개의 page를 가져올 때의 비용을 뜻하고 기본값이 `1.0`으로 설정되어 있습니다.
+`seq_page_cost` 상수는 heap file로부터 page들을 순차적으로 가져오는 작업을 할 때 한 개의 page를 가져올 때의 비용을 뜻하고 기본값이 `1.0`으로 설정되어 있습니다.
 
 ![14](./images/14.png)
 
-`random_page_cost` 상수는 heap file로 부터 page들을 순차적으로가 아닌 랜덤하게 가져올 때 한개의 page를 가져올 때의 비용을 뜻하고 기본값이 `4.0`으로 설정되어 있습니다.
+`random_page_cost` 상수는 heap file로부터 page들을 순차적으로가 아닌 랜덤하게 가져올 때 한 개의 page를 가져올 때의 비용을 뜻하고 기본값이 `4.0`으로 설정되어 있습니다.
 
-여기서 이 `4.0`이라는 상수값은 바로 위에서 봤던 `seq_page_cost`와 비교한 상대값입니다. (랜덤 page를 가져오는 작업이 page를 순서대로 읽어들이는 작업의 4배정도 비용이 든다는 뜻이겠죠.)
+여기서 이 `4.0`이라는 상수값은 바로 위에서 봤던 `seq_page_cost`와 비교한 상대값입니다. (랜덤 page를 가져오는 작업이 page를 순서대로 읽어 들이는 작업의 4배 정도 비용이 든다는 뜻이겠죠.)
 
-이 두가지 외 모든 상수값들도 값이 `1.0`인 `seq_page_cost`를 기준으로 비교한 값입니다.
+이 두 가지 외 모든 상수값들도 값이 `1.0`인 `seq_page_cost`를 기준으로 비교한 값입니다.
 
 ## Equation
 
@@ -300,20 +298,60 @@ COST = (# pages read sequentially) * seq_page_cost
 
 `(특정 작업을 진행하는 대상의 숫자) * (해당 작업에 대한 cost constant)`를 전부 더한 값이 됩니다.
 
-(물론 위 공식에 나와있는 부분만 가지고 실제 전체 cost를 계산할 수 있는것은 아니지만 query plan을 계산하는 단계에서는 이 정도로 충분합니다.)
+(물론 위 공식에 나와있는 부분만 가지고 실제 전체 cost를 계산할 수 있는 것은 아니지만 query plan을 계산하는 단계에서는 이 정도로 충분합니다.)
 
 조금 위에서 직접 계산해봤던 `comments` 테이블에 대한 sequential scan을 제공된 cost constant들을 위 식에 대입하여 계산해본다면,
 
-랜덤 페이지를 가져오는 작업, 인덱스를 scan하는 작업, 연산 작업이 없기 때문에 `0`으로 계산되어 아래와 같이 순차적으로 page를 읽어들이는 비용과 row들을 scan하는 비용을 더한 값이 해당 쿼리 노드의 cost가 됩니다.
+랜덤 페이지를 가져오는 작업, 인덱스를 scan 하는 작업, 연산 작업이 없기 때문에 `0`으로 계산되어 아래와 같이 순차적으로 page를 읽어 들이는 비용과 row들을 scan 하는 비용을 더한 값이 해당 쿼리 노드의 cost가 됩니다.
 
 ```
 COST = (# pages read sequentially) * seq_page_cost
        + (# rows scanned) * cpu_tuple_cost
 ```
 
-그래서 실제로 비용 계산 공식을 찾아보면 위 두가지만 가지고 계산하는 예시가 많습니다.
+그래서 실제로 비용 계산 공식을 찾아보면 위 두 가지만 가지고 계산하는 예시가 많습니다.
 
 ## Startup Cost vs Total Cost
 
+지금까지 `EXPLAIN`의 결과에서 특정 query node의 cost에 나와있는 숫자 두 개 중 두 번째 숫자인 전체 cost를 함께 계산해봤습니다.
+
+그렇다면 첫 번째 숫자는 어떤 의미를 갖고 있을까요?
+
 ![15](./images/15.png)
 
+첫 번째 cost 값은 **Startup Cost**입니다.
+
+**Startup Cost**는 query node에서 데이터를 읽기 시작한 시점부터 **첫 번째 row를 출력할 때까지의 시간/비용**을 뜻합니다.
+
+우리가 함께 계산해본 두 번째 cost 값은 **Total Cost**로, query node에서 데이터를 읽기 시작할 때부터 모든 row들을 출력할 때까지의 **전체 시간/비용**을 뜻합니다.
+
+**부모 node**의 **startup cost**는 **자식 node**의 **total cost**를 포함하게 됩니다. (물론 예외 케이스는 존재합니다.)
+
+```sql
+SELECT username, contents
+FROM users
+JOIN comments ON comments.user_id = users.id
+WHERE username = 'Jamessoun93';
+```
+
+![16](./images/16.png)
+
+(여기서도 이해를 돕기 위해 [pgAdmin 4](https://www.pgadmin.org/)의 Explain Analyze 툴을 사용했습니다.)
+
+참고로 여기서는 `users` 테이블에서 `username` 컬럼에 대한 index를 지우고 Sequential Scan을 진행하게끔 했습니다.
+
+첫 번째로 `users` 테이블에 대한 sequential scan은 총 `176.81`의 total cost를 가지게 되고, 이 결과는 해당 쿼리 노드의 부모인 Hash 노드의 startup cost에 더해집니다.
+
+그리고 Hash 노드의 total cost는 부모 노드인 Hash Join 노드의 startup cost에 더해지는 것을 확인할 수 있습니다.
+
+자세히 보면 `comments` 테이블에 대한 sequential scan의 total cost는 부모 노드인 hash join의 startup cost에 더해지지 않는 것을 확인할 수 있습니다.
+
+이건 오류가 아니고 실제로 hash join 노드에서 `comments` 테이블에 대한 sequential scan의 결과를 전부 준비시켜놓고 처리하는 게 아니고 row 한줄한줄 읽을 때마다 hash join 노드로 넘어와 이미 준비가 되어있는 상태이기 때문입니다.
+
+반대로 hash node에서는 작업을 시작하기 전에 `users` 테이블에 대한 sequential scan 노드로부터 모든 row를 넘겨받아야 하고, hash join 노드에서 사용할 hash table을 생성한 뒤 통째로 넘겨야하기 때문에 `users` 테이블에 대한 sequential scan 노드의 total cost가 hash node의 startup cost로 더해지고 결과적으로 hash join 노드의 startup cost로 더해지게 되는 것입니다.
+
+---
+
+이렇게 Postgres에서 `EXPLAIN`과 `EXPLAIN ANALYZE`를 활용하여 쿼리 성능을 분석하는 방법에 대해 알아봤습니다.
+
+다음에는 이런 내용을 적용하여 문제를 찾아낸 뒤 효율적으로 바꾸는 예시를 들어볼 계획입니다.

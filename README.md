@@ -17,7 +17,7 @@ https://seunghyunson.tistory.com
     - [Validation & Constraints](database/validation-and-constraints)
     - [Postgres는 데이터를 어떻게 저장할까?](database/how-postgres-stores-data)
     - [Database Index란?](database/index)
-    - [[⚠️WIP] 쿼리 성능 분석하기 (PostgreSQL)](database/analyzing-query-performance(postgres))
+    - [쿼리 성능 분석하기 (PostgreSQL)](database/analyzing-query-performance(postgres))
 - [Docker](docker)
     - [[Docker #1] Docker 기본 명령어](docker/basic-commands)
     - [[Docker #2] Docker 컨테이너 활용하기](docker/inside-containers)
