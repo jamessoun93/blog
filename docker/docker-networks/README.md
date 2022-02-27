@@ -20,29 +20,68 @@
 
 ---
 
-## Commands
+# Commands
 
-### Network 리스트 확인
 ```sh
 docker network ls
 ```
 
-### Network inspect 하기
+![2](./images/2.png)
+
+여기서 bridge 네트워크란, host의 네트워크로의 연결다리를 놓아주는 도커의 기본 가상 네트워크입니다.
+
+host 네트워크는 도커의 가상 네트워크를 사용하지 않고 컨테이너를 호스트 인터페이스에 직접 연결하는 특수 네트워크입니다. (host 네트워크를 사용하는데에는 장단점이 있습니다.)
+
+## Network inspect 하기
+
 ```sh
-docker network inspect
+docker network inspect {NETWORK_NAME}
 ```
 
-### 새로운 Network 생성
+해당 네트워크의 subnet, gateway와 네트워크에 연결되어있는 컨테이너 정보를 보여줍니다.
+
+## 새로운 Network 생성
+
 ```sh
-docker network create --driver
+docker network create {NETWORK_NAME}
 ```
 
-### 컨테이너에 네트워크 연결
+![3](./images/3.png)
+
+## 새로운 컨테이너 생성 시 Network 지정
+
 ```sh
-docker network connect
+docker container run -d --name {CONTAINER_NAME} --network {NETWORK_NAME} {IMAGE_NAME}
 ```
 
-### 컨테이너에 네트워크 연결 끊기
+![4](./images/4.png)
+
+위에서 생성한 my_net 네트워크를 inspect 해보면 아무 container도 연결되어 있지 않은 것을 확인할 수 있습니다.
+
+![5](./images/5.png)
+
+새로운 컨테이너를 생성할 때 my_net 네트워크를 지정해준뒤 다시 my_net을 inspect해보니 컨테이너가 추가된 것을 확인할 수 있습니다.
+
+## 존재하는 컨테이너에 네트워크 연결
+
 ```sh
-docker network disconnect
+docker network connect {NETWORK_ID} {CONTAINER_ID}
 ```
+
+![6](./images/6.png)
+
+이미 존재하는 webhost 컨테이너를 새로 생성한 my_net 네트워크에 연결했습니다.
+
+![7](./images/7.png)
+
+그런 뒤 webhost 컨테이너를 inspect 해보니 해당 컨테이너가 bridge와 방금 추가한 my_net 네트워크에 연결되어 있는 것을 확인할 수 있습니다.
+
+## 컨테이너에 네트워크 연결 끊기
+
+```sh
+docker network disconnect {NETWORK_ID} {CONTAINER_ID}
+```
+
+---
+
+!!!!!!(DNS 부분 추가해야함)
