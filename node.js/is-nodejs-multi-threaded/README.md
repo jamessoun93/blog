@@ -10,12 +10,13 @@ main thread 가 있고 이 하나의 thread가 v8 엔진, node apis, libuv를 �
 
 이 중 blocking 함수가 있다면 전체 퍼포먼스에 영향을 미침.
 
-여기서 libuv를 살펴봐야함.
+그래서 node.js는 libuv 라는 라이브러리를 사용하여 비동기 처리를 가능하게 해줍니다.
 
-libuv가 asynchronous I/O를 책임짐.
+Node.js는 libuv를 I/O-intensive한 작업과 CPU-intensive한 작업에 사용합니다.
 
-- file system
-- network
+I/O-intensive한 작업의 예시로는 DNS 쿼리와 File System을 다루는 작업정도를 들 수 있고, CPU-intensive한 작업은 crypto 라이브러리를 통한 암호화 및 해싱 정도를 예로 들 수 있습니다.
+
+즉, DNS 쿼리를 통해 호스트네임을 ip로 resolve하는 작업, 비동기 파일 처리, 암호화 등등 작업에 있어서 node.js는 해당 작업들을 libuv를 사용하여 thread를 사용합니다. (thread 관련 내용은 아래에서 조금 더 자세히 설명합니다.)
 
 event loop가 비동기 처리를 가능하게 해줌.
 
@@ -50,6 +51,8 @@ thread pool의 thread는 process내 thread와 같음
 
 v8과 이벤트루프를 실행하는 메인 쓰레드가 있고 추가로 가용 가능한 4개의 thread를 제공함 (thread pool)
 
+여기서 default가 4개이고 thread를 많이 사용한다는 것을 알고 있으면 `process.env.UV_THREADPOOL_SIZE=6;` 의 형태로 thread pool의 사이즈를 직접 지정해줘 thread pool의 크기를 늘려주는 방법도 있습니다.
+
 당연히 thread 하나는 한번에 하나의 task만 처리 가능하고 재사용됌.
 
 CPU가 새로운 task가 있을때 매번 쓰레드를 생성하고 작업을 마친 뒤 쓰레드를 없애주는 작업을 안해도 되게 만들어줌. 
@@ -71,3 +74,8 @@ OS 커널을 사용해서 직접 컴퓨터의 하드웨어를 사용하게끔 �
 OS에서 처리하는 비동기 작업들은 쓰레드풀을 건너뛰고 바로 이벤트루프에 처리 결과를 알리고 이벤트 루프가 필요한 callback 함수를 실행함.
 
 JS는 single thread로 synchronous하게 돌지만, 노드는 내부적으로 이런식으로 작동하기 때문에 개발자가 쓰레드를 직접 만질 필요가 없고 non-blocking I/O가 가능하게 해줌.
+
+---
+
+그렇다면 thread를 언제 사용할까요?
+
