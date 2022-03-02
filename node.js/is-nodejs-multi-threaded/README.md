@@ -6,6 +6,27 @@ node.js는 js를 기반 런타임이니 js 동작방식대로 동작할 수 밖�
 
 ---
 
+우선 processes vs threads
+
+Processes
+
+- top-level execution container (like an application)
+- separate memory space
+  - OS가 해당 프로세스에 정해진 메모리 공간을 할당함.
+- lot of safety
+
+Threads
+
+- Runs inside a process
+- Every thread has a parent process that it is attached to
+  - a single process can have multiple threads
+- Shared memory space
+  - all of these multiple threads share the same memory.
+  - you don't have to do anything to share data back and forth btw two diff threads.
+  - really performant
+
+---
+
 main thread 가 있고 이 하나의 thread가 v8 엔진, node apis, libuv를 동작시킴.
 
 이 중 blocking 함수가 있다면 전체 퍼포먼스에 영향을 미침.
@@ -55,7 +76,7 @@ v8과 이벤트루프를 실행하는 메인 쓰레드가 있고 추가로 가�
 
 당연히 thread 하나는 한번에 하나의 task만 처리 가능하고 재사용됌.
 
-CPU가 새로운 task가 있을때 매번 쓰레드를 생성하고 작업을 마친 뒤 쓰레드를 없애주는 작업을 안해도 되게 만들어줌. 
+CPU가 새로운 task가 있을때 매번 쓰레드를 생성하고 작업을 마친 뒤 쓰레드를 없애주는 작업을 안해도 되게 만들어줌.
 
 당장 가용 가능한 쓰레드가 없다면 기다려야 함.
 
@@ -78,4 +99,3 @@ JS는 single thread로 synchronous하게 돌지만, 노드는 내부적으로 �
 ---
 
 그렇다면 thread를 언제 사용할까요?
-
