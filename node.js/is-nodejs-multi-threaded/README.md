@@ -25,6 +25,12 @@ Threads
   - you don't have to do anything to share data back and forth btw two diff threads.
   - really performant
 
+all javascript, v8, and the event loop run in one thread (called the main thread)
+
+synchronous c++ backed methods are run in the main thread
+
+asynchronous c++ backed methods sometimes don't run in the main thread
+
 ---
 
 main thread 가 있고 이 하나의 thread가 v8 엔진, node apis, libuv를 동작시킴.
