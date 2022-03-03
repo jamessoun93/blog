@@ -31,6 +31,10 @@ synchronous c++ backed methods are run in the main thread
 
 asynchronous c++ backed methods sometimes don't run in the main thread
 
+example: Crypto
+
+very cpu-intensive task (does a lot of math)
+
 ---
 
 main thread 가 있고 이 하나의 thread가 v8 엔진, node apis, libuv를 동작시킴.
