@@ -35,6 +35,8 @@ example: Crypto
 
 very cpu-intensive task (does a lot of math)
 
+https://blog.logrocket.com/a-complete-guide-to-threads-in-node-js-4fa3898fe74f/
+
 ---
 
 main thread 가 있고 이 하나의 thread가 v8 엔진, node apis, libuv를 동작시킴.
