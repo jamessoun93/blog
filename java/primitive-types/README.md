@@ -108,5 +108,23 @@ public class Main {
         double myDoubleValue2 = 5.00 / 3.00; // java treats floating point numbers as double as default
     }
 }
+```
 
+## Char / Boolean
+
+```java
+public class Main {
+
+    public static void main(String[] args) {
+
+        char myChar = 'D'; // 16 bits (NOT single byte) because of Unicode characters
+        char myUnicodeChar = '\u0044'; // D
+        char myCopyrightChar = '\u00A9';
+
+        System.out.println(myUnicodeChar);
+        System.out.println(myCopyrightChar);
+
+        boolean a = true;
+    }
+}
 ```
