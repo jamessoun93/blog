@@ -1,4 +1,4 @@
 # Queues
 
-- [Queue Implementation (JavaScript)](queues-js)
-- [Queue Implementation (Java)](queues-java)
+- [Queue Implementation (JavaScript)](queues-js.md)
+- [Queue Implementation (Java)](queues-java.md)
