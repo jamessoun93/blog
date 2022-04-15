@@ -51,13 +51,8 @@ queue_int.add(1);
 queue_int.offer(2);
 // 출력에 true 라고 출력되는 부분은 offer() 메서드가 리턴한 값으로,
 // 셀의 맨 마지막에 함수를 넣을 경우, 변수가 변수값이 출력되는 것처럼 함수는 함수 리턴값이 출력되는 것임
-
-// Queue 인스턴스를 출력하면, 해당 큐에 들어 있는 아이템 리스트가 출력됨
-System.out.println(queue_int)
-
-// poll() 은 큐의 첫 번째 값 반환, 해당 값은 큐에서 삭제
-queue_int.poll();
-
-// poll() 과 마찬가지로, 첫 번째 값 반환하고, 해당 값은 큐에서 삭제
-queue_int.remove()
+System.out.println(queue_int); // Queue 인스턴스를 출력하면, 해당 큐에 들어 있는 아이템 리스트가 출력됨
+queue_int.poll(); // poll() 은 큐의 첫 번째 값 반환, 해당 값은 큐에서 삭제
+queue_int.remove(); // poll() 과 마찬가지로, 첫 번째 값 반환하고, 해당 값은 큐에서 삭제
+queue_int.clear(); // queue 초기화
 ```
