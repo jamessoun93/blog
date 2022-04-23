@@ -1,5 +1,12 @@
 # JVM: Runtime Data Area
 
+- [Runtime Data Area](#runtime-data-area)
+  - [1. Method Area](#1-method-area)
+  - [2. Heap](#2-heap)
+    - [2-1. Heap: Young Generation](#2-1-heap-young-generation)
+    - [2-2. Heap: Old Generation](#2-2-heap-old-generation)
+  - [3. Stack](#3-stack)
+
 (참고: 해당 포스팅은 Java SE8 Specification을 기준으로 작성되었습니다.)
 
 Java Virtual Machine(JVM) 구조는 크게 Class Loader, Runtime Data Area, Execution 이렇게 세 가지로 나눌 수 있는데, 여기서는 메모리 영역인 Runtime Data Area에 대한 내용을 다룬다.
@@ -70,14 +77,29 @@ Old Gen 영역도 가득 차게 되는 경우 Major GC에 의해 공간이 정�
 
 정말 중요하고 내용이 방대하기 때문에 GC를 주제로 따로 포스트를 작성할 예정이다.
 
-Heap 영역 또한 JVM 시작시 생성되며 JVM 종료시 소멸되고 모든 쓰레드 간 자원이 공유되며, JVM 당 Heap 영역은 하나만 존재한다.
+Heap 영역 또한 JVM 시작시 생성되며 JVM 종료시 소멸되어 JVM 당 Heap 영역은 하나만 존재하고, 모든 쓰레드 간 자원이 공유되기 때문에 동기화 문제가 발생할 수 있다.
 
-## 3, Stack
+## 3. Stack
 
 Stack은 위에서 언급했던 새로운 쓰레드가 생성될 때마다 생성되는 영역이다.
+
+스택 영역은 쓰레드가 실행되면서 실행하는 메소드 별로 해당 스코프 내 할당된 로컬 변수 및 기본형 타입(Primitive type) 변수의 값을 담고, heap 영역에 존재하는 객체에 대한 레퍼런스를 담는다.
+
+해당 값들을 Stack Frame 이라는 블록에 담게되고, 새로운 메소드가 호출될 때마다 이전에 존재하던 Stack Frame 위에 새로운 Stack Frame이 쌓이게 된다.
 
 JVM Stack은 우리가 익히 알고 있는 Last-In-First-Out(LIFO)를 구현하는 자료구조인 Stack과 동일한 방식으로 작동한다.
 
 JavaScript의 Call Stack(호출 스택)에 대해 알고 있다면 같다고 생각하면 된다.
 
-스택 영역은 쓰레드가 실행되면서 실행하는 메소드 별로 해당 스코프 내 할당된 로컬 변수 및 부분적인 결과를 담고, heap 영역에 존재하는 객체에 대한 레퍼런스를 담는다.
+메소드가 실행을 마치게되면 해당하는 stack frame은 사라지고 가장 최근 추가되었던 stack frame에 해당하는 메소드가 이어서 실행된다.
+
+Stack 영역 내에 존재하는 데이터는 해당 stack frame 이 존재하는 한 살아있다.
+
+만약 stack 영역이 가득차게 된다면 Java는 java.lang.StackOverFlowError를 throw 한다.
+
+혹시 Stack Overflow에 대해 잘 모를까봐 설명을 덧붙이자면,  
+엘레베이터에서 양쪽에 거울이 있어서 내 모습이 여러겹으로 끝없이 반사되는것을 본 적이 있을텐데 이런 현상과 비슷하다.  
+프로그래밍에서의 예시로는, 재귀함수를 구현하고 종료되는 시점을 명확하게 만들어두지 않아 특정 메소드의 body에서 본인을 호출하고, 호출된 본인의 body에서 또 본인을 호출해서 Stack Frame이 끝없이 쌓이게 되는 현상을 말한다.
+
+Stack 영역은 쓰레드별로 따로 존재하기 때문에 동시에 실행되고 있는 다른 쓰레드의 영향을 받지 않는다.  
+(이걸 threadsafe 하다고 한다.)
