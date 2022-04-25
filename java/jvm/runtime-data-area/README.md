@@ -22,6 +22,8 @@ JVM 시작시 생성되며 JVM 종료시 소멸되는 영역들로는 Method Are
 
 각 쓰레드가 생성될 때 생성되고 해당 쓰레드가 종료될 때 소멸되는 영역들에는 Stack, PC Register, Native Method Stack이 있습니다.
 
+![이미지 출처: https://dzone.com/articles/jvm-run-time-data-areas](images/1.jpeg)
+
 ## 1. Method Area
 
 Method Area에는 Runtime Constant Pool(런타임 상수 풀), 필드 및 메서드 데이터와 같은 모든 클래스 레벨 데이터와 메서드 및 생성자 대한 코드가 저장됩니다.
@@ -70,6 +72,8 @@ Heap 영역은 Garbage Collection 이라는 메커니즘을 통해 자동으로 
 
 Heap 영역은 크게 Young Generation과 Old Generation으로 구분됩니다.
 
+![이미지 출처: https://medium.com/platform-engineer/understanding-java-memory-model-1d0863f6d973](images/2.png)
+
 ### 2-1. Heap: Young Generation
 
 Young Gen은 Eden 영역과 Survivor Memory Spaces라 불리우는 S0, S1 영역으로 나뉘어집니다.
@@ -95,6 +99,8 @@ Heap 영역 또한 JVM 시작시 생성되며 JVM 종료시 소멸되어 JVM 당
 Stack은 위에서 언급했던 새로운 쓰레드가 생성될 때마다 생성되는 영역입니다.
 
 스택 영역은 쓰레드가 실행되면서 실행하는 메소드 별로 해당 스코프 내 할당된 로컬 변수 및 기본형 타입(Primitive type) 변수의 값을 담고, heap 영역에 존재하는 객체에 대한 레퍼런스를 담습니다.
+
+![이미지 출처: baeldung.com](images/3.jpeg)
 
 해당 값들을 Stack Frame 이라는 블록에 담게되고, 새로운 메소드가 호출될 때마다 이전에 존재하던 Stack Frame 위에 새로운 Stack Frame이 쌓이게 됩니다.
 
@@ -130,5 +136,3 @@ JVM의 PC Register는 JVM 쓰레드가 현재 실행중인 메소드의 명령�
 Native Method는 Java가 아닌 다른 언어로 작성된 메서드입니다. C, C++ 또는 다른 프로그래밍 언어일 수 있습니다.
 
 Native Method Stack은 JVM Stack 영역과 비슷하게 LIFO를 구현하는 자료구조이며, Java 메서드가 아닌 네이티브 메서드들의 호출 순서를 담아 관리하는 stack 입니다.
-
-(diagram 추가 예정)
