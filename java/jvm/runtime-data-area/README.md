@@ -1,5 +1,7 @@
 # JVM: Runtime Data Area
 
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/23)
+
 - [Runtime Data Area](#runtime-data-area)
   - [1. Method Area](#1-method-area)
     - [1-1. Runtime Constant Pool](#1-1-runtime-constant-pool)
