@@ -43,6 +43,7 @@ https://seunghyunson.tistory.com
 - [Network](network)
   - [SSH란 무엇일까?](network/ssh)
   - [Nginx 설치 및 Load Balancing 적용하기 (MacOS)](network/nginx-as-a-load-balancer)
+  - [Proxy란? Load Balancing이란?](network/proxies-and-load-balancing)
 - [Node.js](node.js)
   - [Node.js Internals](node.js/nodejs-internals)
   - [Is Node.js Multi-threaded?](node.js/is-nodejs-multi-threaded)
