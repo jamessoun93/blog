@@ -39,6 +39,7 @@ https://seunghyunson.tistory.com
   - [Threads](java/threads)
   - [Java Virtual Machine (JVM)](java/jvm)
     - [Runtime Data Area](java/jvm/runtime-data-area)
+    - [Garbage Collection](java/jvm/garbage-collection)
   - [객체의 불변성(Immutability)은 왜 중요할까? Java에서 객체를 Immutable하게 쓰는 방법은?](java/immutable-classes)
 - [Linux](linux)
   - [알아두면 편한 Command Line 단축키](linux/command-line)

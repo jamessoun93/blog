@@ -79,6 +79,9 @@ Java에서 변수를 final로 선언하면 해당 변수를 초기화할 때 할
 
 getter 메소드는 실제 객체에 대한 reference를 반환하는 대신 깊은 복사를 통해 생성한 객체에 대한 reference를 반환하여, 반환받은 객체를 사용할 때 실수로라도 기존 객체를 건드릴 일이 없게끔 만들어줄 수 있습니다.
 
+(Collections 관련 내용 추가 필요)
+예를 들면 ArrayList
+
 ---
 
 ## References
