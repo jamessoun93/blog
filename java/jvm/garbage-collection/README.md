@@ -13,7 +13,7 @@ Serial GC
 
 Parallel GC
 
-- 기본구조는 serial이랑 같은데 multi corefmf dldydgotj ej QKfmrp
+- 기본구조는 serial이랑 같은데 multi core를 이용해서 더 빠르게
 
 CMS GC
 
