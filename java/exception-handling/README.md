@@ -43,3 +43,9 @@ conn.close();
 - try 다음의 소괄호에 자원을 할당하고 이는 try - resources문이 종료되면 자동 반환한다.
 - 이때 소괄호 안에 들어가는 자원은 꼭 AutoClosable(마커인터페이스)를 구현해야한다.
 - try catch에서 자원반납을 까먹는 경우가 있는데 이를 사용하면 무조건 반환하니 사용하는 것도 좋은 선택이 될 것임.
+
+---
+
+## References
+
+- https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
