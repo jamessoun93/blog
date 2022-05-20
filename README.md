@@ -42,6 +42,7 @@ https://seunghyunson.tistory.com
   - [Collection 객체를 Immutable하게 사용하는 방법](java/immutable-collections)
   - [Abstract Classes vs Interfaces](java/abstract-classes-vs-interfaces)
   - [예외 처리할 때 특히 신경 써야 할 부분 (자원 관리)](java/exception-handling)
+  - [JDK 버전 별 ArrayList 길이 가변 확장 방법 차이](java/arraylist-implementation-differences)
 - [Linux](linux)
   - [알아두면 편한 Command Line 단축키](linux/command-line)
 - [Network](network)
