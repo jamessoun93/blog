@@ -1,4 +1,4 @@
-# Socket 통신 예시
+# Socket을 이용한 TCP Connection 예시
 
 ```java
 // SocketServerSample.java
@@ -76,7 +76,7 @@ public class SocketClientSample {
 
     public void sendSocketSample() {
         for (int loop = 0; loop < 3; loop++) {
-            sendSocketData("Data sent at " + new Date());
+            sendSocketData("Sending data at " + new Date());
         }
         sendSocketData("EXIT");
     }
@@ -115,3 +115,12 @@ public class SocketClientSample {
 ```
 
 ![1.png](./images/1.png)
+
+---
+
+TCP 커넥션이라 서버가 켜져있지 않으면 `ConnectException`이 발생합니다.
+
+```bash
+Client: connecting
+java.net.ConnectException: Connection refused (Connection refused)
+```
