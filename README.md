@@ -46,6 +46,7 @@ https://seunghyunson.tistory.com
   - [Socket을 이용한 TCP Connection 예시](java/tcp)
   - [DatagramSocket을 이용한 UDP Connection 예시](java/udp)
   - [[Java의 동시성 #1] Threads](java/concurrency-in-java-threads-intro)
+  - [멀티스레드 환경에서 Thread Safe 하게 Singleton Pattern 사용하기](java/singleton-pattern-in-multi-threaded-environment)
 - [Linux](linux)
   - [알아두면 편한 Command Line 단축키](linux/command-line)
 - [Network](network)
