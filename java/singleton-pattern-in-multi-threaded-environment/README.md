@@ -134,4 +134,52 @@ class Singleton {
 
 ### 해결방법 4 - static 초기화
 
+위에서 소개한 세 가지 방법은 전부 런타임 시 필요한 인스턴스를 생성해서 할당하는 방식입니다.
+
+이번에 소개드릴 static 초기화 방식은 런타임 시가 아닌 최초 JVM이 Class Loader를 이용해서 class path 내에 있는 모든 클래스들을 로드할 때 미리 인스턴스를 생성해주는 방법입니다.
+
+```java
+class Singleton {
+    private static Singleton myInstance = new Singleton();
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        return myInstance;
+    }
+}
+```
+
+이 방법의 장점으로는 클래스를 로드하면서 인스턴스가 생성되기 때문에 런타임 시 동시성을 제어할 목적으로 사용하는 `synchronized` 키워드와 `volatile` 키워드를 전혀 사용할 필요가 없어집니다.
+
+위의 해결 방법들의 문제점들을 전부 해결해주는 아주 좋은 방법처럼 보여지지만 여기에도 물론 단점은 존재합니다.
+
+해당 클래스를 약 300초 뒤에 사용한다고 했을때 이 static 초기화 방식을 사용하면 300초 뒤에 사용하나 3초뒤에 사용하나 무조건 최초 클래스가 로딩될 때 만들어지기 때문에 아직 필요하지 않은 시점에도 불필요하게 메모리 자원을 선점하고 있게 됩니다.
+
+심지어 사용하지 않게 되는 경우가 있을 수도 있는데 그런 경우 불필요한 자원 낭비가 될 수 있습니다.
+
+실제로 이렇게 객체 하나 만들어두는게 그렇게 큰 자원낭비인가 싶을 수 있겠지만, 이런 것들을 파악해서 optimize 할 수 있는 능력은 꼭 필요하다고 생각합니다.
+
 ### 해결방법 5 - LazyHolder 방식
+
+LazyHolder 방식은 Class Loader에 약간의 트릭을 줘서 위의 static 초기화 방식의 문제점을 보완하는 방법입니다.
+
+```java
+class Singleton {
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+    private static class LazyHolder() {
+        private static final Singleton INSTANCE = new Singleton();
+    }
+}
+```
+
+위와 같이 LazyHolder라는 Inner Class를 선언해서 Singleton 클래스가 최초 클래스 로딩 단계에서 로드가 되더라도 싱글톤 인스턴스는 생성되지 않습니다.
+
+그렇기 때문에 `getInstance()`가 호출될 때 접근을 해서 생성하게 되는 것이죠.
+
+### 해결방법 6 - ENUM 방식
