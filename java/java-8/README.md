@@ -159,3 +159,34 @@ Java 8에서 제공하는 주요 Functional 인터페이스는 java.util.functio
 - Function
 - UnaryOperator
 - Binaryoperator
+
+# Stream
+
+- 자바의 스트림은 “뭔가 연속된 정보”를 처리하는 데 사용한다.
+- 컬렉션에는 스트림 을 사용할 수 있지만, 아쉽게도 배열에는 스트림을 사용할 수 없다
+- 배열을 컬렉션의 List로 변환하는 방법은 여러 가지가 존재함.
+- `Arrays.asList()`
+
+```java
+Integer[] values = { 1, 3, 5 };
+List<Integer> list = new ArrayList<Integer>(Arrays.asList(values));
+```
+
+하지만 이렇게 할 필요없이 Arrays에 있는 stream()이라는 메소드를 사용하면 됌.  
+매개 변수로 배열을 넘겨주면 Stream 객체를 리턴해줌.
+
+```java
+Integer[] values = { 1, 3, 5 };
+List<Integer> list = Arrays.stream(values).collect(Collectors.toList());
+```
+
+Stream의 구조
+
+- list.<스트림 생성>.<중개 연산>.<종단 연산>
+- list.stream().filter(x -> x > 10).count()
+- stream()은 순차적으로 데이터를 처리함
+- parallelStream() 이라는 것을 사용해서 보다 빠르게 처리할 수 있지만 CPU를 많이 사용하고 몇개의 쓰레드로 처리되는지 보장이 되지 않음.
+
+Stream forEach()
+
+-
