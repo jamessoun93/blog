@@ -48,6 +48,7 @@ https://seunghyunson.tistory.com
   - [[Java의 동시성 #1] Threads](java/concurrency-in-java-threads-intro)
   - [[Java의 동시성 #2] 동기화(Synchronization)](java/concurrency-in-java-synchronization)
   - [멀티스레드 환경에서 Thread Safe 하게 Singleton Pattern 사용하기](java/singleton-pattern-in-multi-threaded-environment)
+  - [Java 8에서 새로 소개된 기능들](java/whats-new-in-java-8)
 - [Linux](linux)
   - [알아두면 편한 Command Line 단축키](linux/command-line)
 - [Network](network)

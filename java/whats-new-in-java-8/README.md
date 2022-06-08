@@ -553,36 +553,66 @@ Java 8 부터는 인터페이스에서 default 메소드가 이런 불편함을 
 
 # Stream
 
-- 자바의 스트림은 “뭔가 연속된 정보”를 처리하는 데 사용한다.
-- 컬렉션에는 스트림 을 사용할 수 있지만, 아쉽게도 배열에는 스트림을 사용할 수 없다
+- 자바의 스트림은 "뭔가 연속된 정보"를 처리하는 데 사용한다.
+- stream은 데이터를 담고 있는 저장소가 아니다
+- stream은 순차적으로 데이터를 처리함.
+- Functional in nature: 제공된 데이터를 변경하지 않는다.
+- 스트림으로 처리하는 데이터는 오직 한번만 처리한다.
+- 스트림으로 처리해야할 데이터가 무제한일 수도 있다.
+  - 이럴 경우 Short Circuit 메소드를 사용해서 제한할 수 있다)
+- Stream의 구조
+  - list.<스트림 생성>.<중개 연산>.<종단 연산>
+  - list.stream().filter(x -> x > 10).count()
+  - 중개 operation 들은 lazy 하다.
+    - 종단 연산을 만나기 전까지 아무것도 하지 않는다.
+    - 종단 연산이 있어야만 실행된다는 뜻
+  - 중개 연산은 Stream 을 리턴하고, 종단 연산은 Stream 을 리턴하지 않는다.
+- 컬렉션에는 스트림을 사용할 수 있지만, 아쉽게도 배열에는 스트림을 사용할 수 없다
 - 배열을 컬렉션의 List로 변환하는 방법은 여러 가지가 존재함.
-- `Arrays.asList()`
+  - `Arrays.asList()`
 
 ```java
-Integer[] values = { 1, 3, 5 };
-List<Integer> list = new ArrayList<Integer>(Arrays.asList(values));
+public static void main(String[] args) {
+    List<String> names = new ArrayList<>();
+    names.add("seunghyun");
+    names.add("james");
+    names.add("tom");
+
+    List<String> collect = names.stream().map((s) -> {
+        return s.toUpperCase();
+    }).collect(Collectors.toList());
+
+    collect.forEach(System.out::println);
+
+    System.out.println("--------------");
+
+    names.forEach(System.out::println);
+}
 ```
 
-하지만 이렇게 할 필요없이 Arrays에 있는 stream()이라는 메소드를 사용하면 됌.  
-매개 변수로 배열을 넘겨주면 Stream 객체를 리턴해줌.
+- parallelStream() 을 이용해서 병렬처리도 쉽게 가능함.
 
 ```java
-Integer[] values = { 1, 3, 5 };
-List<Integer> list = Arrays.stream(values).collect(Collectors.toList());
+public static void main(String[] args) {
+    List<String> names = new ArrayList<>();
+    names.add("seunghyun");
+    names.add("james");
+    names.add("tom");
+
+    List<String> collect = names.parallelStream().map(s -> {
+        System.out.println(s + " " + Thread.currentThread().getName());
+        return s.toUpperCase();
+    }).collect(Collectors.toList());
+
+    collect.forEach(System.out::println);
+}
 ```
 
-Stream의 구조
+하지만 CPU를 많이 사용하고 몇개의 쓰레드로 처리되는지 보장이 되지 않아 더 늘어질 가능성도 있음.
 
-- list.<스트림 생성>.<중개 연산>.<종단 연산>
-- list.stream().filter(x -> x > 10).count()
-- stream()은 순차적으로 데이터를 처리함
-- parallelStream() 이라는 것을 사용해서 보다 빠르게 처리할 수 있지만 CPU를 많이 사용하고 몇개의 쓰레드로 처리되는지 보장이 되지 않음.
+데이터가 정말 많은 경우 유용할 수 있고, 실제로 테스트 해보면서 적용하는게 좋음.
 
-Stream forEach()
-
--
-
-일반수가
+# Stream API
 
 ---
 
