@@ -752,6 +752,53 @@ spring.forEach(System.out::println);
 
 ---
 
+# Date와 Time
+
+기존 Date 관련 클래스들
+
+```java
+Date date = new Date();
+Calendar calendar = new GregorianCalendar();
+SimpleDateFormat dateFormat = new SimpleDateFormat();
+```
+
+뭐가 문제냐
+
+1. 작명이 헷갈리게 되어있음 (Date 객체에서 시간을 가져올 수 있거나 그런것)
+2. mutable 하기 때문에 thread safe 하지 않음
+   - 타임을 변수에 담고 해당 변수에 setTime() 해서 다른 시간을 할당해줄수 있고 뭐 그런 문제..
+   - 멀티쓰레드 환경에서는 당연히 thread safe 하지 않음
+3. 버그 발생 여지가 많다 (type safe 하지 않음)
+   - month 같은 경우 0부터 시작하고 그래서 헷갈림
+   - GregorianCalendar 에서 파라미터로 int를 받는데 그렇게 되면 음수도 들어갈 수 있음
+   - type safe 하게 쓰려면 Month 라는 enum 타입 같은거 만들어서 할당해줄 수 있음
+4. 이런 문제들 때문에 joda-time 이라는걸 많이 사용했었음.
+   - 자바 8부터 joda-time 에서 제공하던 많은 기능들을 자바 스탠다드로 들여오게 됌. (java.time 패키지)
+
+---
+
+# CompletableFuture
+
+쓰레드를 만들고 관리하는 작업을 어플리케이션에서 분리해서 Executor에 위임
+
+- 쓰레드 만들기: 어플리케이션이 사용할 쓰레드 풀을 만들어 관리한다.
+- 쓰레드 관리: 쓰레드 생명 주기를 관리한다.
+- 작업 처리 및 실행: 쓰레드로 실행할 작업을 제공할 수 있는 API를 제공한다.
+
+## Callable & Future
+
+Callable은 Runnable이랑 비슷하지만 리턴값을 가짐 (Runnable은 void)
+
+...이어서
+
+---
+
+# Annotation의 변화
+
+# 배열 병렬 정렬
+
+# Metaspace
+
 <!-- Optional
 
 - Optional 클래스는 null 처리를 보다 간편하게 하기 위해서 만들어졌다.
