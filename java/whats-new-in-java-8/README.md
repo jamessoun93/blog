@@ -138,14 +138,14 @@ Calculate calculateAdd = new Calculate() {
         return a+b;
     };
 }
-System.out.printin(calculateAdd.operation(1,2));
+System.out.println(calculateAdd.operation(1,2));
 ```
 
 이를 람다 표현식으로 처리하면
 
 ```java
 Calculate calculateAdd = (a,b) -> a + b;
-System.out.printin(calculateAdd.operation(1,2));
+System.out.println(calculateAdd.operation(1,2));
 ```
 
 - 일반적인 인터페이스이지만, 이 인터페이스는 Functional(기능적) 인터페이스라고 부를 수 있다.
@@ -866,7 +866,7 @@ System.out.println(joiner);
 List<String> stringList = Arrays.asList(stringArray);
 String result = stringList.stream()
     .collect(Collectors.joining(","));
-System.out.printin(result);
+System.out.println(result);
 ```
 
 --- -->
