@@ -1,8 +1,10 @@
 # Object-oriented Programming (OOP)
 
+**스프링 입문을 위한 자바 객체 지향의 원리와 이해 (김종민)** 을 읽고 정리한 글.
+
 ## 객체 지향은 인간 지향이다
 
-우주 만물은 객체들의 합이고, 모든 것은 사물이다. -> Object\
+우주 만물은 객체들의 합이고, 모든 것은 사물이다. -> Object
 
 "우리가 주변에서 사물을 인지하는 방식대로 프로그래밍할 수 있지 않겠는가" 하는 것이 객체 지향의 출발.
 
@@ -11,7 +13,7 @@
 - 사물은 속성을 갖는다.
 - 사물은 행위를 한다.
 
-사물을 하나하나 이해하기 보다 classify(분류)해서 이해하는 것이 인간의 인지법.
+사물을 하나하나 이해하기 보다 classify(분류)해서 이해하는 것이 인간의 인지법.
 
 ---
 
@@ -94,12 +96,11 @@ class 강아지 {
 	final static Boolean 암컷 = false;
 	Boolean 성별;
 
-	void 소변보다() {
-		if (this.성별 == 수컷) {
-			// 한쪽 다리를 들고 소변을 본다.
-		} else {
-			// 뒷다리 두 개를 굽혀 앉은 자세로 소변을 본다.
-		}
+void 소변보다() {
+	if (this.성별 == 수컷) {
+		// 한쪽 다리를 들고 소변을 본다.
+	} else {
+		// 뒷다리 두 개를 굽혀 앉은 자세로 소변을 본다.
 	}
 }
 ```
@@ -187,3 +188,253 @@ ISP에 대해 이야기 할 때 인터페이스 최소주의 원칙이 함께 �
 "고차원 모듈은 저차원 모듈에 의존하면 안 된다. 이 두 모듈 모두 다른 추상화된 것에 의존해야 한다."  
 "추상화된 것은 구체적인 것에 의존하면 안 된다. 구체적인 것이 추상화된 것에 의존해야 한다."  
 "자주 변경되는 구체 클래스에 의존하지 마라" - 로버트 C. 마틴
+
+자동차의 경우 계절에 따라 다른 종류의 타이어로 교체할 수 있음. (스노우타이어, 일반타이어, 광폭타이어 등)
+
+하지만 자동차 클래스가 특정 종류의 구체적인 타이어에 의존하게 설계를 한다면 타이어 종류를 변경할 때마다 자동차의 의존성을 수정해줘야 함.
+
+하지만 타이어 인터페이스를 만들어서 자동차가 의존하게 한다면, 타이어가 바뀌어도 자동차 클래스 코드 수정이 필요 없어짐.
+
+결국 OCP에 대한 내용임.
+
+이렇게 자신보다 변하기 쉬운 것에 의존하던 것을 추상화된 인터페이스나 상위 클래스를 두어 변하기 쉬운 것의 변화에 영향받지 않게 하는 것이 의존 역전 원칙임.
+
+"자신보다 변하기 쉬운 것에 의존하지 마라." -> 의존 역전 원칙
+
+변하기 쉬운 하위 클래스에 의존하기보다 상위 클래스, 인터페이스, 추상 클래스처럼 변할 가능성이 낮은 것에 의존하게 끔 하는 것.
+
+대표적인 예시는 OCP와 마찬가지로 JDBC.
+
+---
+
+## Design Patterns
+
+### Adapter Pattern
+
+호출당하는 쪽의 메서드를 호출하는 쪽의 코드에 대응하도록 중간에 변환기를 통해 호출하는 패턴.
+
+(예시 추가 필요)
+
+### Proxy Pattern
+
+제어 흐름을 조정하기 위한 목적으로 중간에 대리자를 두는 패턴.
+
+- Proxy는 실제 서비스와 같은 이름의 메서드를 구현한다. 이때 인터페이스를 사용한다.
+- Proxy는 실제 서비스에 대한 참조 변수를 갖는다(합성).
+- Proxy는 실제 서비스의 같은 이름을 가진 메서드를 호출하고 그 값을 그대로 클라이언트에게 돌려준다. (중요)
+- Proxy는 실제 서비스의 메서드 호출 전후에 별도의 로직을 수행할 수도 있다.
+
+실제 서비스 클래스와 프록시 클래스 사이에 인터페이스를 두고 OCP와 DIP를 적용한 패턴임.
+
+- 자동차 (마티즈도 될 수 있고, 소나타도 될 수 있고)
+- 타이어 (스노우타이어, 일반타이어 등)
+
+### Decorator Pattern
+
+프록시 패턴은 클라이언트가 최종적으로 돌려 받는 반환값을 조작하지 않고 그대로 전달함.
+
+데코레이터 패턴은 해당 반환값에 장식을 입혀서 반환하는 용도로 사용함.
+
+프록시 패턴과 동일한 구조를 가짐.
+
+### Singleton Pattern
+
+(알고 있어서 패스)
+
+### Template Method Pattern
+
+상위 클래스의 견본 메서드에서 하위 클래스가 오버라이딩한 메서드를 호출하는 패턴.
+
+```java
+// Dog 클래스
+
+public class Dog {
+	public void playWithOwner() {
+		System.out.println("귀염둥이 이리온~");
+		System.out.println("멍멍!");
+		System.out.println("꼬리 살랑 살랑~");
+		System.out.println("잘했어");
+	}
+}
+```
+
+```java
+// Cat 클래스
+
+public class Cat {
+	public void playWithOwner() {
+		System.out.println("귀염둥이 이리온~");
+		System.out.println("야옹 야옹");
+		System.out.println("꼬리 살랑 살랑~");
+		System.out.println("잘했어");
+	}
+}
+```
+
+위 예시에서 Dog 클래스와 Cat 클래스는 각각의 두번째 프린트문 빼고는 전부 동일한 작업을 수행함.
+
+이럴 때 달라지는 동일한 부분만 상위 클래스에 두고, 달라지는 부분만 하위 클래스로 분할하여 효율적으로 수정할 수 있다.
+
+```java
+public abstract class Animal {
+	// 템플릿 메서드
+	public void playWithOwner() {
+		System.out.println("귀염둥이 이리온~");
+		play();
+		runSomething();
+		System.out.println("잘했어");
+	}
+
+	// 추상 메서드
+	abstract void play();
+
+	// Hook(갈고리) 메서드
+	void runSomething() {
+		System.out.println("꼬리 살랑 살랑~");
+	}
+}
+```
+
+```java
+// Dog 클래스 (템플릿 메서드 패턴을 적용한)
+
+public class Dog {
+	// 추상 메서드 오버라이딩
+	@Override
+	void play() {
+		System.out.println("멍멍!");
+	}
+
+	// Hook(갈고리) 메서드 오버라이딩
+	@Override
+	void runSomething() {
+		System.out.println("멍멍! 꼬리 살랑 살랑~");
+	}
+}
+```
+
+```java
+// Cat 클래스 (템플릿 메서드 패턴을 적용한)
+
+public class Dog {
+	// 추상 메서드 오버라이딩
+	@Override
+	void play() {
+		System.out.println("야옹!");
+	}
+
+	// Hook(갈고리) 메서드 오버라이딩
+	@Override
+	void runSomething() {
+		System.out.println("야옹! 꼬리 살랑 살랑~");
+	}
+}
+```
+
+```java
+public class Driver {
+	public static void main(String[] args) {
+		Animal woong = new Dog();
+		Animal kitty = new Cat();
+
+		woong.playWithOwner();
+		kitty.playWithOwner();
+	}
+}
+```
+
+상위클래스인 Animal는 아래와 같이 구성되어 있음.
+
+- 템플릿을 제공하는 playWithOwner() 메서드
+- 하위 클래스에게 구현을 강제하는 play() 추상 메서드
+- 하위 클래스가 선택적으로 오버라이딩할 수 있는 runSomething() 메서드
+
+### Factory Method Pattern
+
+하위 클래스에서 팩터리 메서드를 오버라이드해서 객체를 반환하게 하는 것.
+
+```java
+public abstract class Animal {
+	// 추상 팩터리 메서드
+	abstract AnimalToy getToy();
+}
+```
+
+```java
+// 팩터리 메서드가 생성할 객체의 상위 클래스
+public abstract class AnimalToy {
+	abstract void identify();
+}
+```
+
+```java
+public class Dog extends Animal {
+	// 추상 팩터리 메서드 오버라이드
+	@Override
+	AnimalToy getToy() {
+		return new DogToy();
+	}
+}
+```
+
+```java
+public class DogToy extends AnimalToy {
+	@Override
+	public void identify() {
+		System.out.println("나는 테니스공! 강아지의 친구!");
+	}
+}
+```
+
+```java
+public class Cat extends Animal {
+	// 추상 팩터리 메서드 오버라이드
+	@Override
+	AnimalToy getToy() {
+		return new CatToy();
+	}
+}
+```
+
+```java
+public class CatToy extends AnimalToy {
+	@Override
+	public void identify() {
+		System.out.println("나는 캣타워! 고양이의 친구!");
+	}
+}
+```
+
+```java
+public class Driver {
+	public static void main(String[] args) {
+		// 팩터리 메서드를 보유한 객체들 생성
+		Animal woong = new Dog();
+		Animal kitty = new Cat();
+
+		// 팩터리 메서드가 반환하는 객체들
+		AnimalToy woongBall = woong.getToy();
+		AnimalToy kittyTower = kitty.getToy();
+
+		// 팩터리 메서드가 반환한 객체들을 사용
+		woongBall.identify();
+		kittyTower.identify();
+	}
+}
+```
+
+오버라이드된 메서드가 객체를 반환하는 패턴.
+
+### Strategy Pattern
+
+- 전략 메서드를 가진 전략 객체
+- 전략 객체를 사용하는 컨텍스트(전략 객체의 사용자/소비자)
+- 전략 객체를 생성해 컨텍스트에 주입하는 클라이언트(제3자, 전략 객체의 공급자)
+
+클라이언트는 다양한 전략 중 하나를 선택해 생성한 후 컨텍스트에 주입함.
+
+즉, 클라이언트가 전략을 생성해 전략을 실행할 컨텍스트에 주입하는 패턴.
+
+### Template Callback Pattern
+
+전략 패턴과 모든 것이 동일한데 전략을 익명 내부 클래스로 정의해서 사용함. (람다 활용하면 될 듯)
