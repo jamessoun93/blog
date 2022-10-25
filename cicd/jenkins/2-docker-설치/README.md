@@ -42,6 +42,8 @@ sudo systemctl status docker.service
 
 ![2](./images/2.png)
 
+---
+
 ## 2. sudo 없이 실행할 수 있게 설정
 
 ```
