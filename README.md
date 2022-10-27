@@ -51,6 +51,7 @@ https://seunghyunson.tistory.com
   - [멀티스레드 환경에서 Thread Safe 하게 Singleton Pattern 사용하기](java/singleton-pattern-in-multi-threaded-environment)
   - [Java 8에서 새로 소개된 기능들](java/whats-new-in-java-8)
 - [JPA](jpa)
+  - [[JPA #1] JPA란? JPA를 왜 사용할까? JPA 장점은?](jpa/1-JPA-intro)
   - [스키마 자동 생성 기능](jpa/auto-generated-schema)
   - [영속성 컨텍스트](jpa/persistence-context)
   - [엔티티 매핑](jpa/entity-mapping)
