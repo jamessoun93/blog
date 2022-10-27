@@ -1,18 +1,22 @@
-# JPA: 엔티티 매핑 (Entity Mapping)
+# [JPA #4] 엔티티 매핑 (Entity Mapping)
+
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/)
+
+이번 포스팅에서는 JPA가 엔티티 객체와 테이블을 어떻게 매핑하는지 알아보겠습니다.
 
 ## 객체와 테이블 매핑 (@Entity, @Table)
 
 ### @Entity
 
-- @Entity가 붙은 클래스는 JPA가 관리하는 엔티티임.
-- JPA를 사용해서 테이블과 매핑할 클래는 @Entity 필수
-- 주의할 점
-  - 기본 생성자 필수 (파라미터가 없는 public 또는 protected 생성자)
-  - final 클래스, enum, interface, inner 클래스는 사용 불가
-  - DB에 저장할 필드에 final 사용 불가
-- name 속성
-  - JPA에서 사용할 엔티티의 이름을 지정
-  - 기본값을 클래명 그대로이고 이름 충돌이 없으면 그냥 기본값 그대로 사용
+`@Entity` 라는 애노테이션이 붙은 클래스는 JPA가 관리하는 엔티티를 뜻합니다.
+
+JPA를 사용해서 테이블과 매핑할 클래스는 필수로 붙여줘야 합니다.
+
+엔티티를 선언할 때는 몇 가지 주의사항이 있는데요.
+
+- 기본 생성자가 필수입니다. (기본 생성자란, 파라미터가 없는 public 또는 protected 생성자를 뜻합니다.)
+- final 클래스, enum, interface, inner 클래스는 사용이 불가합니다.
+- DB에 저장할 필드에 final 키워드를 사용할 수 없습니다.
 
 ### @Table
 
