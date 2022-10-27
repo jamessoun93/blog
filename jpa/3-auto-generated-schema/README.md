@@ -1,6 +1,6 @@
 # [JPA #3] 데이터베이스 스키마 자동 생성 기능
 
-[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/)
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/31)
 
 JPA에는 데이터베이스 스키마를 자동으로 생성해주는 기능이 존재합니다.
 
@@ -10,11 +10,9 @@ JPA에는 데이터베이스 스키마를 자동으로 생성해주는 기능이
 
 DB 스키마 자동 생성 기능은 데이터베이스 방언을 활용해서 사용하는 데이터베이스에 맞는 적절한 DDL을 생성해줍니다.
 
-```java
-<property name="hibernate.hbm2ddl.auto" value="create" />
-```
+---
 
-속성
+## hibernate.hbm2ddl.auto 속성
 
 - create: DROP + CREATE
 - create-drop: create와 같으나 종료 시점에 DROP
@@ -22,13 +20,21 @@ DB 스키마 자동 생성 기능은 데이터베이스 방언을 활용해서 �
 - validate: 엔티티와 테이블이 정상 매핑되었는 확인
 - none: 사용하지 않음
 
-주의할 점은 운영 장비에는 절대 create, create-drop, update를 사용하면 안된다.
+해당 속성들을 필요에 따라 아래와 같이 사용할 수 있습니다.
+
+```java
+<property name="hibernate.hbm2ddl.auto" value="create" />
+```
+
+주의할 점은 운영 장비에는 절대 create, create-drop, update를 사용하면 안됩니다.
 
 - 개발 초기 단계에는 create 또는 update
 - 테스트 서버는 update 또는 validate
 - staging, prod 서버는 validate 또는 none
-- 그래도 되도록이면 테스트 서버 및 개발 서버에서도 쓰지 않는게 권장사항
-- 만들어주는 sql문 정도만 검수 꼼꼼히해서 활용하는게 좋은 방법
+
+되도록이면 테스트 서버 및 개발 서버에서도 쓰지 않는게 권장사항입니다.
+
+만들어주는 SQL문 정도만 꼼꼼히 검수해서 활용하는게 좋은 방법입니다.
 
 ---
 
