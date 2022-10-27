@@ -1,4 +1,4 @@
-# [Jenkins, Docker를 이용한 CI/CD 구축하기 #1] EC2 서버 셋업
+# [Jenkins, Docker를 이용한 CI/CD 구축하기 #1] Jenkins용 EC2 서버 셋업
 
 ## 1. EC2 인스턴스 생성
 
