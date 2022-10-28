@@ -1,4 +1,6 @@
-# JPA: 연관관계 매핑 (Relationship Mapping)
+# [JPA #5] 연관관계 매핑 (Relationship Mapping)
+
+[Tistory 블로그 포스팅 바로가기](https://seunghyunson.tistory.com/)
 
 _"객체지향 설계의 목표는 자율적인 객체들의 협력 공동체를 만드는 것이다." - 조영호(객체지향의 사실과 오해)_
 
