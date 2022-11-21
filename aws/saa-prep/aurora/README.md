@@ -34,6 +34,18 @@
 - Writer Endpoint: master 인스턴스만이 write를 담당하기 때문에 master instance를 바라보는 Writer Endpoint가 존재하고 client는 Writer Endpoint를 호출
 - Reader Endpoint: 15개까지 auto scale 가능한 read replicas에 대한 load balancing (로드밸런싱은 statement level이 아닌 connection level에서 진행)
 
+# Aurora 생성
+
+![3](./images/3.png)
+
+Aurora DB를 생성하면 Writer 인스턴스와 Reader 인스턴스가 각각 다른 AZ에 생성됨.
+
+![4](./images/4.png)
+
+애플리케이션에서는 Regional Cluster 클릭 시 위와 같이 제공되는 엔드포인트를 활용하면 됨.
+
+평균 CPU Usage나 평균 커넥션 갯수는 타겟 metric으로 삼아 오토스케일링 policy를 지정할 수도 있음.
+
 # 정리: Features of Aurora
 
 - Automatic fail-over
