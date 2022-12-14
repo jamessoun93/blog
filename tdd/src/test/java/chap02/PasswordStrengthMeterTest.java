@@ -1,6 +1,5 @@
 package chap02;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,64 +28,54 @@ public class PasswordStrengthMeterTest {
 
 
     @Test
-    @DisplayName("인풋이 NULL 인 경우: INVALID")
-    void nullInput_Then_Invalid() {
+    void 인풋이_NULL_인_경우_INVALID() {
         assertStrength(null, PasswordStrength.INVALID);
     }
 
     @Test
-    @DisplayName("인풋이 비었을 경우: INVALID")
-    void emptyInput_Then_Invalid() {
+    void 인풋이_비었을_경우_INVALID() {
         assertStrength("", PasswordStrength.INVALID);
     }
 
     @Test
-    @DisplayName("모든 조건을 충족하는 경우: STRONG")
-    void meetsAllCriteria_Then_Strong() {
+    void 모든_조건을_충족하는_경우_STRONG() {
         assertStrength("ab12!@AB", PasswordStrength.STRONG);
         assertStrength("abc1!Add", PasswordStrength.STRONG);
     }
 
     @Test
-    @DisplayName("길이 제외 전부 충족하는 경우: NORMAL")
-    void meetsOtherCriteria_except_for_Length_Then_Normal() {
+    void 길이_제외_전부_충족하는_경우_NORMAL() {
         assertStrength("ab12!@A", PasswordStrength.NORMAL);
         assertStrength("Ab12!c", PasswordStrength.NORMAL);
     }
 
     @Test
-    @DisplayName("숫자 제외 전부 충족하는 경우: NORMAL")
-    void meetsOtherCriteria_except_for_number_Then_Normal() {
+    void 숫자_제외_전부_충족하는_경우_NORMAL() {
         assertStrength("ab!@ABqwer", PasswordStrength.NORMAL);
     }
 
     @Test
-    @DisplayName("대문자 제외 전부 충족하는 경우: NORMAL")
-    void meetsOtherCriteria_except_for_Capital_Letter_Then_Normal() {
+    void 대문자_제외_전부_충족하는_경우_NORMAL() {
         assertStrength("dsndjfj222ss", PasswordStrength.NORMAL);
     }
 
     @Test
-    @DisplayName("8글자 이상인 조건만 충족하는 경우: WEAK")
-    void meetsOnlyLengthCriteria_Then_Weak() {
+    void 글자_길이가_8이상인_조건만_충족하는_경우_WEAK() {
         assertStrength("zzzzzzzzzzzzzzz", PasswordStrength.WEAK);
     }
 
     @Test
-    @DisplayName("숫자 포함 조건만 충족하는 경우: WEAK")
-    void meetsOnlyNumberCriteria_Then_Weak() {
+    void 숫자_포함_조건만_충족하는_경우_WEAK() {
         assertStrength("12345", PasswordStrength.WEAK);
     }
 
     @Test
-    @DisplayName("대문자 포함 조건만 충족하는 경우: WEAK")
-    void meetsOnlyCapitalLetterCriteria_Then_Weak() {
+    void 대문자_포함_조건만_충족하는_경우_WEAK() {
         assertStrength("AADDC", PasswordStrength.WEAK);
     }
 
     @Test
-    @DisplayName("아무 조건도 충족하지 못한 경우: WEAK")
-    void meetsNoCriteria_Then_Weak() {
+    void 아무_조건도_충족하지_못한_경우_WEAK() {
         assertStrength("abc", PasswordStrength.WEAK);
     }
 }
