@@ -192,3 +192,5 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/java,maven,gradle,intellij
+
+legacy
