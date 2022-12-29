@@ -7,6 +7,10 @@
 - [5. 캡슐화의 또 다른 장점](#5-캡슐화의-또-다른-장점)
 - [6. 캡슐화를 위한 규칙 #1: Tell, Don't Ask](#6-캡슐화를-위한-규칙-1-tell-dont-ask)
 - [7. 캡슐화를 위한 규칙 #2: Law of Demeter](#7-캡슐화를-위한-규칙-2-law-of-demeter)
+- [8. 연습 #1](#8-연습-1)
+- [9. 연습 #2](#9-연습-2)
+- [10. 연습 #3](#10-연습-3)
+- [11. 연습 #4](#11-연습-4)
 
 ## 1. 캡슐화
 
@@ -180,3 +184,234 @@ acc.isExpired();
 단순하게 만료되었는지 확인을 하는 메서드를 호출하라는 뜻이다.
 
 이런식으로 변경하기 위해서는 애초에 왜 위에서 처럼 `expDate` 를 구해서 `isAfter` 를 하려하는지 이유를 파악하게 되고, 자연스럽게 목적에 맞는 메서드로 구성하기 위해 캡슐화를 하게 된다.
+
+## 8. 연습 #1
+
+```java
+public AuthResult authenticate(String id, String pw) {
+    Member member = findOne(id);
+    if (member == null) return AuthResult.NO_MATCH;
+
+    if (member.getVerificationEmailStatus() != 2) {
+        return AuthResult.NO_EMAIL_VERIFIED;
+    }
+
+    if (passwordEncoder.isPasswordValid(member.getPassword(), pw, member.getId())) {
+        return AuthResult.SUCCESS;
+    }
+
+    return AuthResult.NO_MATCH;
+}
+```
+
+제공된 코드에서 어떤 부분을 캡슐화 해볼지 위에서 정리한 규칙들을 떠올리며 살펴보자.
+
+> Tell, Don't Ask
+
+데이터를 가져와서 판단하는 부분이 있다면?
+
+```java
+if (member.getVerificationEmailStatus() != 2) {
+    return AuthResult.NO_EMAIL_VERIFIED;
+}
+```
+
+위 if 문이 좋은 캡슐화 후보가 될 수 있을 것 같다.
+
+```java
+if (!member.isEmailVerified()) {
+    return AuthResult.NO_EMAIL_VERIFIED;
+}
+```
+
+if 문을 위와 같이 변경하고, `Member` 클래스에 `isEmailVerified` 메서드를 아래와 같이 구현할 수 있다.
+
+```java
+public class Member {
+    private int verificationEmailStatus;
+
+    public boolean isEmailVerified() {
+        return verificationEmailStatus == 2;
+    }
+}
+```
+
+이렇게 하면 `isEmailVerified` 메서드의 내부 코드가 변경돼도 해당 메서드를 호출하는 쪽에서는 변경할 코드가 없다.
+
+## 9. 연습 #2
+
+```java
+public class Rental {
+    private Movie movie;
+    private int daysRented;
+
+    public int getFrequentRenterPoints() {
+        if (movie.getPriceCode() == Movie.NEW_RELEASE && daysRented > 1) return 2;
+        else return 1;
+    }
+}
+```
+
+```java
+public class Movie {
+    public static int REGULAR = 0;
+    public static int NEW_RELEASE = 1;
+    private int priceCode;
+
+    public int getPriceCode() {
+        return priceCode;
+    }
+}
+```
+
+마찬가지로 데이터를 달라고 하는 부분을 찾아보자.
+
+`movie.getPriceCode() == Movie.NEW_RELEASE` 이 부분이 있다.
+
+이 부분을 `movie.isNewRelease()` 로 변경하고 `Movie` 클래스에서 `isNewRelease()` 메서드를 구현할 수 있다.
+
+```java
+public class Rental {
+    private Movie movie;
+    private int daysRented;
+
+    public int getFrequentRenterPoints() {
+        if (movie.isNewRelease() && daysRented > 1) return 2;
+        return 1;
+    }
+}
+```
+
+하지만 조금 더 나아가 `daysRented` 를 받아 계산까지 해주는 방식으로 통으로 메서드화를 해볼 수 있을 것 같다.
+
+```java
+public class Rental {
+    private Movie movie;
+    private int daysRented;
+
+    public int getFrequentRenterPoints() {
+        return movie.getFrequentRenterPoints(daysRented);
+    }
+}
+```
+
+```java
+public class Movie {
+    public static int REGULAR = 0;
+    public static int NEW_RELEASE = 1;
+    private int priceCode;
+
+    public int getFrequentRenterPoints(int daysRented) {
+        if (priceCode == NEW_RELEASE && daysRented > 1) return 2;
+        return 1;
+    }
+}
+```
+
+이렇게 포인트 계산 로직 자체를 `Movie` 클래스에 위임할 수 있다.
+
+데이터를 가지고 있는 쪽에 기능 구현을 하면서 처리를 위해 필요한 값을 인자로 넘겨받는 방식으로 캡슐화를 한 것이다.
+
+## 10. 연습 #3
+
+```java
+public void randomMethod() {
+    Timer t = new Timer();
+    t.startTime = System.currentTimeMillis();
+
+    ...
+
+    t.stopTime = System.currentTimeMillis();
+    long elapsedTime = t.stopTime - t.startTime;
+}
+```
+
+```java
+public class Timer {
+    public long startTime;
+    public long stopTime;
+}
+```
+
+`randomMethod` 에서는 전부 `Timer` 객체의 값을 직접 사용하고 있다.
+
+만약 시간을 측정하는 unit 이 millisecond 에서 second 로 바뀌면 어떻게 될지 안봐도 눈에 훤하다.
+
+위에서 언급한 규칙대로라면 캡슐화하기 좋은 예다.
+
+```java
+public void randomMethod() {
+    Timer t = new Timer();
+    t.start();
+
+    ...
+
+    t.stop();
+    long elapsedTime = t.elapsedTime(MILLISECOND);
+}
+```
+
+```java
+public class Timer {
+    public long startTime;
+    public long stopTime;
+
+    public void start() {
+        this.startTime = System.currentTimeMillis();
+    }
+
+    public void stop() {
+        this.stopTime = System.currentTimeMillis();
+    }
+
+    public long elapsedTime(TimeUnit unit) {
+        switch(unit) {
+            case MILLISECOND:
+                return stopTime - startTime;
+            ...
+        }
+    }
+}
+```
+
+이렇게 `randomMethod` 에서 필요한 기능만 갖다쓰도록 변경되었다.
+
+만약 unit 이 바뀌어도 `randomMethod` 에서는 파라미터로 넘기는 unit 값 외에는 바뀌는 코드가 없다.
+
+## 11. 연습 #4
+
+```java
+public void verifyEmail(String token) {
+    Member member = findByToken(token);
+    if (member == null) throw new BadTokenException();
+
+    if (member.getVerificationEmailStatus() == 2) {
+        throw new AlreadyVerifiedException();
+    } else {
+        member.setVerificationEmailStatus(2);
+    }
+    ...
+}
+```
+
+먼저 후보를 찾아보자.
+
+`member.getVerificationEmailStatus() == 2` 를 `member.isEmailVerified()` 의 형태로 바꿀 수 있을 것 같다.
+
+하지만 바꾸고 나도 사실상 코드 구조는 그대로라 딱히 큰 도움이 되지는 않는 것 같다.
+
+바로 else 에 있는 setter 를 활용해서 데이터를 변경하는 부분 때문인데,
+
+이런식으로 데이터를 가져와 판단한 뒤 값을 변경하는 방식을 담은 코드는 통째로 캡슐화를 하면 큰 도움이 된다.
+
+```java
+public void verifyEmail(String token) {
+    Member member = findByToken(token);
+    if (member == null) throw new BadTokenException();
+
+    member.verifyEmail();
+    ...
+}
+```
+
+그리고 `Member` 클래스에 `verifyEmail` 기능을 구현한다.
