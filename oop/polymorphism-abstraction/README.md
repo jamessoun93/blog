@@ -6,6 +6,7 @@
 - [4. 추상 타입 사용 장점: 유연함](#4-추상-타입-사용-장점-유연함)
 - [5. 추상화는 언제 하는게 좋을까?](#5-추상화는-언제-하는게-좋을까)
 - [6. 추상화를 잘 하려면?](#6-추상화를-잘-하려면)
+- [7. 예시](#7-예시)
 
 ## 1. 다형성
 
@@ -275,3 +276,96 @@ public class OrderService {
 추상화를 잘 하려면 기능을 구현한 이유가 무엇 때문인지 생각해봐야 한다.
 
 그 이유가 명확해지면서 공통점을 도출할 수 있게 되면 원하는 방식으로 추상화가 가능해진다.
+
+## 7. 예시
+
+코드 예시를 통해 추상화의 이점을 살펴보자.
+
+예시로 클라우드 파일 통합 관리 기능을 개발한다고 해보자.
+
+현재 서비스에서 사용중인 클라우드는 드롭박스와 구글드라이브가 있고, 주요 기능으로는 각 클라우드의 파일 목록 조회, 다운로드, 업로드, 삭제, 그리고 검색 기능이 있다.
+
+먼저 추상화를 하지 않은 상태의 파일 목록 조회 기능의 예시를 살펴보자.
+
+```java
+public enum CloudId {
+    DROPBOX,
+    GOOGLE_CLOUD
+}
+```
+
+```java
+pubic class FileInfo {
+    private CloudId cloudId;
+    private String fileId;
+    private String name;
+    private long length;
+
+    ...
+}
+```
+
+```java
+public class CloudFileManager {
+    public List<FileInfo> getFiles(CloudId cloudId) {
+        if (cloudId == CloudId.DROPBOX) {
+            ...
+        } else if (cloudId == CloudId.GOOGLE_DRIVE) {
+            ...
+        }
+    }
+}
+```
+
+이제 추상화를 하지 않은 상태의 파일 다운로드 기능의 예시를 살펴보자.
+
+```java
+public void download(FileInfo file, File localTarget) {
+    if (file.getCloudId() == CloudId.DROPBOX) {
+        ...
+    } else if (file.getCloudId() == CloudId.GOOGLE_DRIVE) {
+        ...
+    }
+}
+```
+
+추상화를 하지 않은 상태의 경우 다른 모든 기능들이 어떻게 구현되어 있을지 느낌이 온다.
+
+이런 상태에서 기능을 확장해 여러가지 클라우드 서비스를 추가해야 한다면 어떻게 될까?
+
+이미 존재하는 모든 기능들에 추가할 클라우드 서비스 개수만큼 else if 문이 추가된다...
+
+즉, 추상화를 안하면 이런식으로 코드 구조가 길어지고 복잡해질 가능성이 높다.
+
+새로운 클라우드 서비스에 대한 지원을 추가할때마다 모든 메서드에 새로운 if 문이 추가되면서 코드가 점점 읽기 힘들어져 진행 자체가 느려질 수 있게 된다.
+
+관련 코드가 여러 곳으로 분산된다는 문제도 있다. 하나의 클라우드 서비스에 대한 처리 관련 코드가 여러 메서드에 흩어지게 된다.
+
+결과적으로 코드 가독성과 분석 속도가 저하됨에따라 실수할 가능성이 높고 불필요한 디버깅 시간이 증가되는 형태가 된다.
+
+그렇다면 이제 추상화를 해보자.
+
+## 추상화
+
+결국 서비스에서 지원하고 있는 모든 클라우드 서비스를 이용해 공통적으로 하고 싶은 일들이 정해져 있다.
+
+이것을 일반화해서 클라우드 파일시스템 이라는 추상 타입을 도출할 수 있다.
+
+`CloudFileSystem` 이라는 인터페이스를 통해 파일 목록 불러오기, 검색, 파일 불러오기, 파일 추가하기 등 기능을 포함하게 한다.
+
+그리고 해당 기능들에서 쓸 파일 객체를 `CloudFile` 이라는 인터페이스를 두고 파일을 다루는 것과 관련된 기능을 포함하게 한다.
+
+그런 뒤 `CloudFileSystemFactory` 클래스를 생성해 `cloudId` 에 따른 `CloudFileSystem` 객체를 가져오게 한다.
+
+이런 추상 타입들을 이용해서 DROPBOX 용 파일 시스템을 구현해보자.
+
+```java
+public class DropBoxFileSystem implements CloudFileSystem {
+    prviate DropBoxClient dbClient = new DropBoxClient(...);
+
+    @Override
+    public List<CloudFile> getFiles() {
+        ...
+    }
+}
+```
