@@ -79,3 +79,11 @@ https://seunghyunson.tistory.com
 - [Spring](spring)
   - [Spring AOP](spring/spring-aop)
   - [Spring Core](spring/spring-core)
+
+## 책 내용 정리
+
+- [📖 테스트 주도 개발 시작하기](https://github.com/jamessoun93/tdd)
+- [📖 Effective Java](https://github.com/jamessoun93/effective-java)
+- [📖 Modern Java in Action](https://github.com/jamessoun93/modern-java-in-action)
+- [📖 Good Code, Bad Code](https://github.com/jamessoun93/good-code-bad-code)
+- [📖 Designing Data-Intensive Applications](https://github.com/jamessoun93/designing-data-intensive-applications)
