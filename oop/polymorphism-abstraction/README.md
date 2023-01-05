@@ -357,14 +357,14 @@ public void download(FileInfo file, File localTarget) {
 
 그런 뒤 `CloudFileSystemFactory` 클래스를 생성해 `cloudId` 에 따른 `CloudFileSystem` 객체를 가져오게 한다.
 
-이런 추상 타입들을 이용해서 DROPBOX 용 파일 시스템을 구현해보자.
+이런 추상 타입들을 이용해서 DROPBOX 용 파일 시스템을 구현해서 파일 목록을 불러오는 기능을 추가해보자.
 
 ```java
 public class DropBoxFileSystem implements CloudFileSystem {
-    prviate DropBoxClient dbClient = new DropBoxClient(...);
+    private DropBoxClient dbClient = new DropBoxClient(...);
 
     @Override
-    public List<CloudFile> getFiles() {
+    public List<CloudFile> getFiles() { // CloudFile 활용해서 리턴
         List<DbFile> dbFiles = dbClient.getFiles();
         List<CloudFile> results = new ArrayList<>(dbFiles.size());
         for (DbFile file : dbFiles) {
@@ -376,4 +376,33 @@ public class DropBoxFileSystem implements CloudFileSystem {
 }
 ```
 
-getFiles
+```java
+public class DropBoxCloudFile implements CloudFile {
+    private DropBoxClient dbClient;
+    private DbFile dbFile;
+
+    ...
+}
+```
+
+이렇게 하면 앞서 작성했던 `CloudFileManager` 클래스는 아래와 같이 변경할 수 있다.
+
+```java
+public class CloudFileManager {
+    public List<CloudFile> getFiles(CloudId cloudId) {
+        // if (cloudId == CloudId.DROPBOX) {
+        //     ...
+        // } else if (cloudId == CloudId.GOOGLE_DRIVE) {
+        //     ...
+        // }
+        CloudFileSystem fileSystem = CloudFileSystemFactory.getFileSystem(cloudId);
+        return fileSystem.getFiles();
+    }
+
+    public void download(CloudFile file, File localTarget) {
+        file.write(new FileOutputStream(localTarget));
+    }
+}
+```
+
+다른 클라우드에 대한 지원을 추가하려면 CloudFileSystem 과 CloudFile 을 구현한 구현체만 만들어주면 된다.
