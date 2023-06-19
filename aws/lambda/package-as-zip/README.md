@@ -25,13 +25,28 @@ def lambda_handler(event, context):
 pip3 install pymysql -t .
 ```
 
-나는 pymysql이 필요하기 때문에 pymysql을 설치
+패키지가 여러개라면 text 파일을 생성하여 해당 파일에 있는 모든 패키지를 한번에 내려받도록 하는게 좋다.
 
-4. 람다 업로드를 위한 zip (생성한 디렉토리에서)
+```
+// requirements.txt
+
+pymysql
+numpy
+```
+
+이렇게 한 경우
 
 ```sh
-zip -r ../lambda_function.zip .
+pip3 install -r requirements.txt -t .
 ```
+
+4. 람다 업로드를 위한 zip
+
+```sh
+zip -r lambda_function.zip .
+```
+
+`lambda_function.zip` 이라는 zip 파일명을 해당 디렉토리에 생성하도록 했다.
 
 5. 람다에 업로드
 
